@@ -34,6 +34,77 @@ friendly_names = {
 #############################
 st.set_page_config(page_title="太空漫步及适老化评估系统", layout="wide")
 # ...existing code...
+st.markdown("""
+<style>
+/* 确保内容区有足够顶部空间 */
+div.block-container {
+    padding-top: 70px !important;
+}
+
+/* 禁用所有可能影响布局的过渡效果 */
+.main .element-container, form, [data-testid="stForm"] {
+    transition: none !important;
+}
+
+/* 清除可能影响顶部区域的所有元素样式 */
+.main > .block-container > div:first-child {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+</style>
+
+<script>
+// 在页面加载完成后执行
+document.addEventListener('DOMContentLoaded', function() {
+    // 创建标题容器
+    const headerContainer = document.createElement('div');
+    headerContainer.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: #F8F8F8;
+        text-align: center;
+        padding: 10px 0;
+        z-index: 9999999;
+        border-bottom: 1px solid #ccc;
+    `;
+    
+    // 创建标题文本
+    const titleElement = document.createElement('h1');
+    titleElement.style.cssText = `
+        margin: 0;
+        font-size: 2.5em;
+        font-family: "SimSun", "NSimSun", "宋体", serif;
+    `;
+    titleElement.textContent = "太空漫步机适老化评估系统";
+    
+    // 组装并添加到body
+    headerContainer.appendChild(titleElement);
+    document.body.appendChild(headerContainer);
+    
+    // 监听表单提交按钮点击
+    const observer = new MutationObserver(() => {
+        const submitButtons = document.querySelectorAll('button[kind="primaryFormSubmit"]');
+        submitButtons.forEach(button => {
+            if (!button.getAttribute('listened')) {
+                button.setAttribute('listened', 'true');
+                button.addEventListener('click', () => {
+                    // 确保标题保持可见并在顶部
+                    setTimeout(() => {
+                        headerContainer.style.opacity = '1';
+                        headerContainer.style.pointerEvents = 'auto';
+                    }, 100);
+                });
+            }
+        });
+    });
+    
+    // 开始监视DOM变化
+    observer.observe(document.body, { childList: true, subtree: true });
+});
+</script>
+""", unsafe_allow_html=True)
 # 立即应用重要的表单样式覆盖
 st.markdown("""
 <style>
@@ -206,20 +277,7 @@ hr.section-divider {
 </style>
 """
 st.markdown(custom_css, unsafe_allow_html=True)
-# ...existing code...
-st.markdown("""
-<style>
-/* 为固定标题预留空间 */
-div.block-container {
-    padding-top: 20px !important; 
-}
-</style>
 
-<div style="position: fixed; top: 0; left: 0; width: 100%; background-color: #F8F8F8; 
-text-align: center; padding: 10px 0; z-index: 1000; border-bottom: 1px solid #ccc;">
-    <h1 style="margin: 0; font-size:2.5em;">太空漫步机适老化评估系统</h1>
-</div>
-""", unsafe_allow_html=True)
 
 custom_css_sidebar = """
 <style>
