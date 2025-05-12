@@ -5,22 +5,10 @@ from shapely.geometry import Point, MultiPoint
 import os
 import sys
 from image_data import par_base64
-import time
 
 # 在导入部分后，初始化session_state
 if "last_evaluation_results" not in st.session_state:
     st.session_state.last_evaluation_results = None
-
-# 初始化代码放在这里👇
-if 'initialized' not in st.session_state:
-    st.session_state.initialized = False
-
-if not st.session_state.initialized:
-    # 先显示加载指示器
-    with st.spinner("初始化界面..."):
-        time.sleep(0.5)  # 短暂延迟确保CSS加载
-        st.session_state.initialized = True
-        st.experimental_rerun()  # 重新运行脚本
 
 #############################
 # 全局参数：参数友好名称
@@ -563,6 +551,10 @@ def evaluate_usability_comfort_detail(params, suit_results):
 
 #if not st.session_state.evaluation_done:
 #    st.markdown("**点击评估按钮即可开始评估。评估将从设施安全性、适用性、易用性和舒适性四个方面展开。评估结果仅针对60岁以上老年人。**")
+
+# 在col_input之前添加一个空白容器确保稳定高度
+header_placeholder = st.empty()
+st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
 
 # 三列布局：左侧示意图，中间参数输入，右侧评估结果
 #col_left, col_mid, col_right = st.columns([1.2, 3, 2], gap="medium")
