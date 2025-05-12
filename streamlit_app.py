@@ -28,7 +28,7 @@ friendly_names = {
 #############################
 # 1. 页面设置与自定义 CSS
 #############################
-st.set_page_config(page_title="记住我的名字：梁翔(⌐■_■)", layout="wide")
+st.set_page_config(page_title="太空漫步机适老化评估系统", layout="wide")
 # ...existing code...
 # ...existing code...
 custom_css_top = """
