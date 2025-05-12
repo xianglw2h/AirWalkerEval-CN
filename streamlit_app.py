@@ -54,7 +54,7 @@ st.markdown("""
 .header-placeholder {
     display: block;
     width: 100%;
-    height: 70px; /* 与标题总高度匹配(标题文本+padding) */
+    height: 20px; /* 与标题总高度匹配(标题文本+padding) */
     visibility: hidden;
 }
 
