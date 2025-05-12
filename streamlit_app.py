@@ -50,6 +50,17 @@ st.markdown(custom_css_top, unsafe_allow_html=True)
 
 st.markdown("""
 <style>
+    [data-testid="stSidebar"] > div:first-child {
+        padding-top: 0rem;
+    }
+    [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] > div:first-child {
+        margin-top: 0rem;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<style>
 div[role="alert"] {
     font-size: 18px !important;
 }
