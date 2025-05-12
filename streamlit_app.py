@@ -7,13 +7,6 @@ import sys
 from image_data import par_base64
 import time
 
-# 在脚本顶部添加这个状态初始化代码
-if "initialized" not in st.session_state:
-    st.session_state.initialized = True
-    # 简单的一次性延迟，确保CSS完全加载
-    import time
-    time.sleep(0.1)
-
 # 在导入部分后，初始化session_state
 if "last_evaluation_results" not in st.session_state:
     st.session_state.last_evaluation_results = None
@@ -42,10 +35,9 @@ friendly_names = {
 #############################
 st.set_page_config(page_title="太空漫步及适老化评估系统", layout="wide")
 # ...existing code...
-# 修改固定标题的CSS：
 st.markdown("""
 <style>
-/* 固定标题优化 */
+/* 设置极高的z-index确保标题始终在最顶层 */
 .fixed-header {
     position: fixed;
     top: 0;
@@ -54,39 +46,47 @@ st.markdown("""
     background-color: #F8F8F8;
     text-align: center;
     padding: 10px 0;
-    z-index: 999999;
+    z-index: 999999 !important;
     border-bottom: 1px solid #ccc;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    pointer-events: none; /* 允许点击穿透标题 */
 }
 
-/* 增加物理占位元素的高度，确保内容不会上移 */
+/* 创建一个实际的物理占位元素，而不仅仅依赖padding */
 .header-placeholder {
     display: block;
     width: 100%;
-    height: 80px; /* 稍微增加高度，给足空间 */
+    height: 70px; /* 与标题总高度匹配(标题文本+padding) */
     visibility: hidden;
 }
 
-/* 页面渲染稳定性改进 */
-body .main .block-container {
-    transition: none !important;
-}
-form {
-    transition: none !important;
-    animation: none !important;
-}
-[data-testid="stFormSubmitButton"] {
-    animation: none !important;
-    transform: none !important;
+/* 确保内容区不会穿透标题 */
+.main .block-container {
+    padding-top: 0 !important; /* 不使用padding，使用实际占位元素 */
 }
 
-/* 取消所有可能导致界面闪烁的动画效果 */
-* {
-    animation-duration: 0s !important;
-    transition-duration: 0s !important;
+/* 禁用所有可能导致穿透的过渡效果 */
+.element-container, .stForm, form, [data-testid="stForm"] {
+    transition: none !important;
+}
+
+/* 最高优先级重写所有导致内容上移的样式 */
+.stApp, .main, .element-container, [data-testid="stAppViewContainer"] {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+/* 确保所有的元素容器都不会有顶部间距导致内容上移 */
+.element-container, [data-testid="element-container"] {
+    margin-top: 0 !important;
 }
 </style>
+
+<!-- 标题元素 -->
+<div class="fixed-header">
+    <h1 style="margin: 0; font-size:2.5em;">太空漫步机适老化评估系统</h1>
+</div>
+
+<!-- 物理占位元素确保内容不会上移 -->
+<div class="header-placeholder"></div>
 """, unsafe_allow_html=True)
 # 立即应用重要的表单样式覆盖
 st.markdown("""
