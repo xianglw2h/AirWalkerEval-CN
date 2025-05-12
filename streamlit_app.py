@@ -28,7 +28,7 @@ friendly_names = {
 #############################
 # 1. 页面设置与自定义 CSS
 #############################
-st.set_page_config(page_title="太空漫步机适老化评估系统", layout="wide")
+st.set_page_config(page_title="记住我的名字：梁翔(⌐■_■)", layout="wide")
 # ...existing code...
 # ...existing code...
 custom_css_top = """
@@ -578,67 +578,96 @@ if evaluate_button:
     }
     
     with col_output:
-        # 基本逻辑评估
-        basic_errors = evaluate_basic_logic(params)
-        if basic_errors:
-            for err in basic_errors:
-                st.error(err)
-            st.stop()
-        
-        # 安全性评估
-        safety_errors = evaluate_safety(params)
-        if safety_errors:
-            st.markdown("<p style='font-size:18px;'>🚨设施参数设计不符合安全性标准</p>", unsafe_allow_html=True)
-            for err in safety_errors:
-                st.error(err)
-            st.stop()
-        else:
-            st.success("✅设施符合安全性标准")
-        
-        st.markdown("<hr class='section-divider' style='height:1px; border:none; background:#ccc; margin:0;'>", unsafe_allow_html=True)
-        
-        # 适用性评估
-        suit_results = evaluate_suitability_detail(params)
-        suit_results = evaluate_usability_comfort_detail(params, suit_results)
-        
-        groups = {
-            "扶手": ["h1", "h2", "grip"],
-            "摆杆": ["r1", "r2", "r3", "r4", "r6"],
-            "踏板": ["p2", "p3", "p5_p6", "p3_p4"],
-#            "主立柱": ["pillar"]
-        }
-        # 主立柱部分单独判断
-#        if params["c1"] >= 110 and params["c2"] >= 2.75 and params["c3"] > params["p5"] + params["r5"]:
-#            suit_results["pillar"] = {"suitability_pass": True}
-#        else:
-#            suit_results["pillar"] = {"suitability_pass": False, "suitability_msg": "主立柱应满足直径≥110mm、管壁厚度≥2.75mm，且高度>踏板底面高度+摆杆长度"}
-        
-        for comp, keys in groups.items():
-            comp_pass = all(suit_results.get(key, {}).get("suitability_pass", False) for key in keys)
-            if comp_pass:
-                st.markdown(f"<p style='font-size:18px;'>✅{comp}部分适用性良好</p>", unsafe_allow_html=True)
+        # 使用spinner显示加载动画
+        with st.spinner("正在评估中..."):
+            # 创建一个列表来收集所有评估结果
+            evaluation_results = []
+            
+            # 基本逻辑评估
+            basic_errors = evaluate_basic_logic(params)
+            if basic_errors:
+                for err in basic_errors:
+                    evaluation_results.append({"type": "error", "message": err})
+                # 短暂延迟让加载动画更明显
+                import time
+                time.sleep(1)
             else:
-                for key in keys:
-                    if key in suit_results and not suit_results[key].get("suitability_pass", False):
-                        st.warning(f"{suit_results[key].get('suitability_msg')}")
-        
-        st.markdown("<hr class='section-divider' style='height:1px; border:none; background:#ccc; margin:0;'>", unsafe_allow_html=True)
-
-        # 舒适性评估（仅适用性通过的参数）
-        for key, result in suit_results.items():
-            if result.get("suitability_pass", False) and "comfort_pass" in result:
-                if result["comfort_pass"]:
-                    st.markdown(f"<p style='font-size:18px;'>✅{friendly_names.get(key, key)}使用舒适</p>", unsafe_allow_html=True)
+                # 安全性评估
+                safety_errors = evaluate_safety(params)
+                if safety_errors:
+                    evaluation_results.append({"type": "markdown", "message": "<p style='font-size:18px;'>🚨设施参数设计不符合安全性标准</p>"})
+                    for err in safety_errors:
+                        evaluation_results.append({"type": "error", "message": err})
+                    # 短暂延迟让加载动画更明显
+                    import time
+                    time.sleep(1)
                 else:
-                    st.info(f"{result.get('comfort_msg')}")
+                    evaluation_results.append({"type": "success", "message": "✅设施符合安全性标准"})
+                
+                    evaluation_results.append({"type": "divider"})
+                    
+                    # 适用性评估
+                    suit_results = evaluate_suitability_detail(params)
+                    suit_results = evaluate_usability_comfort_detail(params, suit_results)
+                    
+                    groups = {
+                        "扶手": ["h1", "h2", "grip"],
+                        "摆杆": ["r1", "r2", "r3", "r4", "r6"],
+                        "踏板": ["p2", "p3", "p5_p6", "p3_p4"],
+                    }
+                    
+                    for comp, keys in groups.items():
+                        comp_pass = all(suit_results.get(key, {}).get("suitability_pass", False) for key in keys)
+                        if comp_pass:
+                            evaluation_results.append({"type": "markdown", "message": f"<p style='font-size:18px;'>✅{comp}部分适用性良好</p>"})
+                        else:
+                            for key in keys:
+                                if key in suit_results and not suit_results[key].get("suitability_pass", False):
+                                    evaluation_results.append({"type": "warning", "message": f"{suit_results[key].get('suitability_msg')}"})
+                    
+                    evaluation_results.append({"type": "divider"})
 
-        st.markdown("<hr class='section-divider' style='height:1px; border:none; background:#ccc; margin:0;'>", unsafe_allow_html=True)
+                    # 舒适性评估（仅适用性通过的参数）
+                    for key, result in suit_results.items():
+                        if result.get("suitability_pass", False) and "comfort_pass" in result:
+                            if result["comfort_pass"]:
+                                evaluation_results.append({"type": "markdown", "message": f"<p style='font-size:18px;'>✅{friendly_names.get(key, key)}使用舒适</p>"})
+                            else:
+                                evaluation_results.append({"type": "info", "message": f"{result.get('comfort_msg')}"})
+
+                    evaluation_results.append({"type": "divider"})
+                    
+                    # 易用性评估（仅适用性通过的参数）
+                    for key, result in suit_results.items():
+                        if result.get("suitability_pass", False) and "usability_pass" in result:
+                            if result["usability_pass"]:
+                                evaluation_results.append({"type": "markdown", "message": f"<p style='font-size:18px;'>✅{friendly_names.get(key, key)}-易用性良好</p>"})
+                            else:
+                                evaluation_results.append({"type": "info", "message": f"{result.get('usability_msg')}"})
+                    
+                    # 小延迟让加载动画更明显
+                    import time
+                    time.sleep(1)
         
-        # 易用性评估（仅适用性通过的参数）
-        for key, result in suit_results.items():
-            if result.get("suitability_pass", False) and "usability_pass" in result:
-                if result["usability_pass"]:
-                    st.markdown(f"<p style='font-size:18px;'>✅{friendly_names.get(key, key)}-易用性良好</p>", unsafe_allow_html=True)
-                else:
-                    st.info(f"{result.get('usability_msg')}")
+        # 清空当前结果区域内容
+        placeholder = st.empty()
+        with placeholder.container():
+            # 加载结束后一次性显示所有结果
+            for result in evaluation_results:
+                if result["type"] == "error":
+                    st.error(result["message"])
+                elif result["type"] == "success":
+                    st.success(result["message"])
+                elif result["type"] == "warning":
+                    st.warning(result["message"])
+                elif result["type"] == "info":
+                    st.info(result["message"])
+                elif result["type"] == "markdown":
+                    st.markdown(result["message"], unsafe_allow_html=True)
+                elif result["type"] == "divider":
+                    st.markdown("<hr class='section-divider' style='height:1px; border:none; background:#ccc; margin:0;'>", unsafe_allow_html=True)
+            
+            # 如果有基本逻辑错误或安全错误则停止评估
+            if basic_errors or (not basic_errors and safety_errors):
+                st.stop()
         
