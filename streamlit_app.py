@@ -731,6 +731,13 @@ if evaluate_button:
                 import time
                 time.sleep(2)
         
+
+        
+        # 清除加载动画
+        loading_container.empty()
+
+
+        
         # 清空当前结果区域内容
         placeholder = st.empty()
         with placeholder.container():
