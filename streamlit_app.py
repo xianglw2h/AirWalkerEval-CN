@@ -552,10 +552,6 @@ def evaluate_usability_comfort_detail(params, suit_results):
 #if not st.session_state.evaluation_done:
 #    st.markdown("**点击评估按钮即可开始评估。评估将从设施安全性、适用性、易用性和舒适性四个方面展开。评估结果仅针对60岁以上老年人。**")
 
-# 在col_input之前添加一个空白容器确保稳定高度
-header_placeholder = st.empty()
-st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
-
 # 三列布局：左侧示意图，中间参数输入，右侧评估结果
 #col_left, col_mid, col_right = st.columns([1.2, 3, 2], gap="medium")
 # 原有的三列布局代码替换为两列布局：
