@@ -5,6 +5,7 @@ from shapely.geometry import Point, MultiPoint
 import os
 import sys
 from image_data import par_base64
+import time
 
 # 在导入部分后，初始化session_state
 if "last_evaluation_results" not in st.session_state:
