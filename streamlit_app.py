@@ -32,77 +32,8 @@ friendly_names = {
 #############################
 # 1. 页面设置与自定义 CSS
 #############################
-st.set_page_config(page_title="太空漫步机适老化评估系统2", layout="wide")
+st.set_page_config(page_title="太空漫步及适老化评估系统", layout="wide")
 # ...existing code...
-st.markdown("""
-<style>
-/* 固定标题容器 */
-.fixed-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 70px;
-    background-color: #F8F8F8;
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-bottom: 1px solid #ccc;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    transition: opacity 0.3s ease;
-}
-
-/* 确保内容区域有足够的顶部间距 */
-.main .block-container {
-    padding-top: 90px !important;
-    margin-top: 0 !important;
-}
-
-/* 确保其他所有容器不添加额外空间 */
-.stApp {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-}
-
-.main {
-    padding-top: 0 !important;
-    margin-top: 0 !important;
-}
-
-[data-testid="stAppViewContainer"], 
-[data-testid="stAppViewContainer"] > div,
-[data-testid="stVerticalBlock"] {
-    padding-top: 0 !important;
-    margin-top: 0 !important;
-}
-
-/* 控制表单提交时标题行为的JS */
-</style>
-
-<script>
-// 添加DOM变化监听器确保标题始终可见
-document.addEventListener('DOMContentLoaded', function() {
-    // 创建一个观察器实例
-    const observer = new MutationObserver(function() {
-        // 确保固定标题始终存在
-        if (!document.querySelector('.fixed-header')) {
-            const header = document.createElement('div');
-            header.className = 'fixed-header';
-            header.innerHTML = '<h1 style="margin:0;font-size:2.5em;">太空漫步机适老化评估系统</h1>';
-            document.body.appendChild(header);
-        }
-    });
-    
-    // 启动观察器
-    observer.observe(document.body, { childList: true, subtree: true });
-});
-</script>
-
-<div class="fixed-header">
-    <h1 style="margin: 0; font-size:2.5em;">太空漫步机适老化评估系统</h1>
-</div>
-""", unsafe_allow_html=True)
 # 立即应用重要的表单样式覆盖
 st.markdown("""
 <style>
@@ -275,6 +206,20 @@ hr.section-divider {
 </style>
 """
 st.markdown(custom_css, unsafe_allow_html=True)
+# ...existing code...
+st.markdown("""
+<style>
+/* 为固定标题预留空间 */
+div.block-container {
+    padding-top: 20px !important; 
+}
+</style>
+
+<div style="position: fixed; top: 0; left: 0; width: 100%; background-color: #F8F8F8; 
+text-align: center; padding: 10px 0; z-index: 1000; border-bottom: 1px solid #ccc;">
+    <h1 style="margin: 0; font-size:2.5em;">太空漫步机适老化评估系统</h1>
+</div>
+""", unsafe_allow_html=True)
 
 custom_css_sidebar = """
 <style>
@@ -607,6 +552,8 @@ def evaluate_usability_comfort_detail(params, suit_results):
 #if not st.session_state.evaluation_done:
 #    st.markdown("**点击评估按钮即可开始评估。评估将从设施安全性、适用性、易用性和舒适性四个方面展开。评估结果仅针对60岁以上老年人。**")
 
+# 然后再定义列布局
+col_input, col_output = st.columns([2, 1], gap="medium")
 # 三列布局：左侧示意图，中间参数输入，右侧评估结果
 #col_left, col_mid, col_right = st.columns([1.2, 3, 2], gap="medium")
 # 原有的三列布局代码替换为两列布局：
