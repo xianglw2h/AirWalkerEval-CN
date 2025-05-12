@@ -6,6 +6,10 @@ import os
 import sys
 from image_data import par_base64
 
+# 在导入部分后，初始化session_state
+if "last_evaluation_results" not in st.session_state:
+    st.session_state.last_evaluation_results = None
+
 #############################
 # 全局参数：参数友好名称
 #############################
@@ -30,7 +34,62 @@ friendly_names = {
 #############################
 st.set_page_config(page_title="记住我的名字：梁翔(⌐■_■)", layout="wide")
 # ...existing code...
-# ...existing code...
+# 在最顶部的CSS部分添加以下代码，去除form的外框
+custom_css = """
+<style>
+/* 去除form的外框和内边距 */
+.stForm {
+    border: none !important;
+    padding: 0 !important;
+    background-color: transparent !important;
+}
+.stForm > div {
+    border: none !important;
+    padding: 0 !important;
+    background-color: transparent !important;
+}
+.stForm [data-testid="stFormSubmitButton"] {
+    border-top: none !important;
+    padding-top: 0 !important;
+    background-color: transparent !important;
+}
+
+/* 保持原有的按钮样式 */
+.stForm [data-testid="stFormSubmitButton"] button {
+    width: 100%;
+    background-color: #FFCA28 !important; 
+    color: black !important;
+    border-radius: 8px !important;
+    padding: 0.8em 1.8em !important;
+    border: none !important;
+    font-size: 1.2em !important;
+    font-weight: bold !important;
+    cursor: pointer !important;
+    transition: background-color 0.3s ease, color 0.3s ease !important;
+}
+
+.stForm [data-testid="stFormSubmitButton"] button:hover {
+    background-color: #FFA000 !important;
+    color: white !important;
+}
+
+.stForm [data-testid="stFormSubmitButton"] button:focus, 
+.stForm [data-testid="stFormSubmitButton"] button:active {
+    background-color: #FFCA28 !important;
+    color: black !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.stForm [data-testid="stFormSubmitButton"] button:focus:hover, 
+.stForm [data-testid="stFormSubmitButton"] button:active:hover {
+    background-color: #FFA000 !important;
+    color: white !important;
+}
+</style>
+"""
+st.markdown(custom_css, unsafe_allow_html=True)
+
 custom_css_top = """
 <style>
 /* 隐藏 header 和 footer */
@@ -483,93 +542,109 @@ st.sidebar.markdown(
 )
 
 # ...在参数输入部分
-# 输入部分
+# 修改参数输入部分，将所有输入控件放在form中
 with col_input:
     st.markdown("### 📃参数输入 <span style='font-size:0.8em; color:#666;'>(单位：mm ,°)</span>", unsafe_allow_html=True)
     
-    # 扶手部分（3个参数，采用6列布局）
-    st.markdown("""
-<div style="display: flex; align-items: center;">
-  <h4 style="margin: 0;">扶手</h4>
-  <hr style="flex: 1; border: 1px solid #ccc; margin-left: 10px;">
-</div>
-""", unsafe_allow_html=True)
-    row_fushou = st.columns([5,7,6,13])
-    h1 = row_fushou[0].number_input("扶手直径-h1", value=40.0, step=1.0)
-    h2 = row_fushou[1].number_input("扶手距踏板底面高度-h2", value=980.0, step=1.0)
-    h3 = row_fushou[2].number_input("扶手水平距离-h3", value=350.0, step=1.0)
-    # 剩余单元可留空
+    # 创建表单 - 所有输入控件都在表单内
+    with st.form(key="input_form"):
+        # 扶手部分
+        st.markdown("""
+        <div style="display: flex; align-items: center;">
+          <h4 style="margin: 0;">扶手</h4>
+          <hr style="flex: 1; border: 1px solid #ccc; margin-left: 10px;">
+        </div>
+        """, unsafe_allow_html=True)
+        row_fushou = st.columns([5,7,6,13])
+        h1 = row_fushou[0].number_input("扶手直径-h1", value=40.0, step=1.0)
+        h2 = row_fushou[1].number_input("扶手距踏板底面高度-h2", value=980.0, step=1.0)
+        h3 = row_fushou[2].number_input("扶手水平距离-h3", value=350.0, step=1.0)
+        
+        # 摆杆部分
+        st.markdown("""
+        <div style="display: flex; align-items: center;">
+          <h4 style="margin: 0;">摆杆</h4>
+          <hr style="flex: 1; border: 1px solid #ccc; margin-left: 10px;">
+        </div>
+        """, unsafe_allow_html=True)
+        row_basigan = st.columns(6)
+        r1 = row_basigan[0].number_input("右前限位角-r1", value=62.0, step=0.1)
+        r2 = row_basigan[1].number_input("右后限位角-r2", value=62.0, step=0.1)
+        r3 = row_basigan[2].number_input("左前限位角-r3", value=60.0, step=0.1)
+        r4 = row_basigan[3].number_input("左后限位角-r4", value=30.0, step=0.1)
+        r5 = row_basigan[4].number_input("摆杆长度-r5", value=830.0, step=1.0)
+        r6 = row_basigan[5].number_input("摆杆间距-r6", value=500.0, step=1.0)
+        
+        # 踏板部分
+        st.markdown("""
+        <div style="display: flex; align-items: center;">
+          <h4 style="margin: 0;">踏板</h4>
+          <hr style="flex: 1; border: 1px solid #ccc; margin-left: 10px;">
+        </div>
+        """, unsafe_allow_html=True)
+        row_taban1 = st.columns(5)
+        p1 = row_taban1[0].number_input("踏板圆角半径-p1", value=5.0, step=0.1)
+        p2 = row_taban1[1].number_input("踏板长度-p2", value=350.0, step=1.0)
+        p3 = row_taban1[2].number_input("踏板宽度-p3", value=150.0, step=1.0)
+        p4 = row_taban1[3].number_input("踏板间距-p4", value=150.0, step=1.0)
+        p5 = row_taban1[4].number_input("踏板距地面高度-p5", value=120.0, step=1.0)
+        
+        # 踏板护板部分
+        st.markdown("""
+        <div style="display: flex; align-items: center;">
+          <h4 style="margin: 0;">踏板护板</h4>
+          <hr style="flex: 1; border: 1px solid #ccc; margin-left: 10px;">
+        </div>
+        """, unsafe_allow_html=True)
+        row_taban2 = st.columns(5)
+        p6 = row_taban2[0].number_input("踏板护板高度-p6", value=40.0, step=1.0)
+        p7 = row_taban2[1].number_input("踏板护板总长度-p7", value=700.0, step=1.0)
+        
+        # 主立柱部分
+        st.markdown("""
+        <div style="display: flex; align-items: center;">
+          <h4 style="margin: 0;">主立柱</h4>
+          <hr style="flex: 1; border: 1px solid #ccc; margin-left: 10px;">
+        </div>
+        """, unsafe_allow_html=True)
+        row_pillar = st.columns(6)
+        c1_val = row_pillar[0].number_input("主立柱直径-c1", value=120.0, step=1.0)
+        c2_val = row_pillar[1].number_input("主立柱壁厚-c2", value=5.0, step=0.1)
+        c3_val = row_pillar[2].number_input("主立柱高度-c3", value=1500.0, step=1.0)
 
-    # 摆杆部分（6个参数，整行展示）
-    st.markdown("""
-<div style="display: flex; align-items: center;">
-  <h4 style="margin: 0;">摆杆</h4>
-  <hr style="flex: 1; border: 1px solid #ccc; margin-left: 10px;">
-</div>
-""", unsafe_allow_html=True)
-    row_basigan = st.columns(6)
-    r1 = row_basigan[0].number_input("右前限位角-r1", value=62.0, step=0.1)
-    r2 = row_basigan[1].number_input("右后限位角-r2", value=62.0, step=0.1)
-    r3 = row_basigan[2].number_input("左前限位角-r3", value=60.0, step=0.1)
-    r4 = row_basigan[3].number_input("左后限位角-r4", value=30.0, step=0.1)
-    r5 = row_basigan[4].number_input("摆杆长度-r5", value=830.0, step=1.0)
-    r6 = row_basigan[5].number_input("摆杆间距-r6", value=500.0, step=1.0)
-    
-    # 踏板部分（仅包含踏板基本参数）
-    st.markdown("""
-<div style="display: flex; align-items: center;">
-  <h4 style="margin: 0;">踏板</h4>
-  <hr style="flex: 1; border: 1px solid #ccc; margin-left: 10px;">
-</div>
-""", unsafe_allow_html=True)
-    row_taban1 = st.columns(5)
-    p1 = row_taban1[0].number_input("踏板圆角半径-p1", value=5.0, step=0.1)
-    p2 = row_taban1[1].number_input("踏板长度-p2", value=350.0, step=1.0)
-    p3 = row_taban1[2].number_input("踏板宽度-p3", value=150.0, step=1.0)
-    p4 = row_taban1[3].number_input("踏板间距-p4", value=150.0, step=1.0)
-    p5 = row_taban1[4].number_input("踏板距地面高度-p5", value=120.0, step=1.0)
-    # 留空单元
+        # 添加垂直空间
+        st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
 
-    # 踏板护板部分（独立部分，仅包含两个参数）
-    st.markdown("""
-<div style="display: flex; align-items: center;">
-  <h4 style="margin: 0;">踏板护板</h4>
-  <hr style="flex: 1; border: 1px solid #ccc; margin-left: 10px;">
-</div>
-""", unsafe_allow_html=True)
-    row_taban2 = st.columns(5)
-    p6 = row_taban2[0].number_input("踏板护板高度-p6", value=40.0, step=1.0)
-    p7 = row_taban2[1].number_input("踏板护板总长度-p7", value=700.0, step=1.0)
-    
-    # 主立柱部分（3个参数，采用6列布局）
-    st.markdown("""
-<div style="display: flex; align-items: center;">
-  <h4 style="margin: 0;">主立柱</h4>
-  <hr style="flex: 1; border: 1px solid #ccc; margin-left: 10px;">
-</div>
-""", unsafe_allow_html=True)
-    row_pillar = st.columns(6)
-    c1_val = row_pillar[0].number_input("主立柱直径-c1", value=120.0, step=1.0)
-    c2_val = row_pillar[1].number_input("主立柱壁厚-c2", value=5.0, step=0.1)
-    c3_val = row_pillar[2].number_input("主立柱高度-c3", value=1500.0, step=1.0)
-    
-    st.write("")
-    btn_cols = st.columns(6)
-    evaluate_button = btn_cols[2].button("评 估", key="evaluate_btn")
+        
+        btn_cols = st.columns(6)  # 创建6列
+        with btn_cols[2]:  # 使用中间的列放置按钮
+            submitted = st.form_submit_button("评 估", use_container_width=False)
+        with btn_cols[3]:  # 空列，保持按钮居中
+            pass
 
-# 输出部分（保持原有代码不变）
+
+# 输出部分
+# 输出部分修改
 with col_output:
     st.markdown("### 👁️‍🗨️评估结果")
+    
+    # 添加固定的说明文字，不放在可被替换的容器中
     st.markdown(
         "<p style='font-size:16px; margin-bottom:20px;'>点击评估按钮即可开始评估。评估将从设施安全性、适用性、易用性和舒适性四个方面展开。评估结果仅针对60岁以上老年人。</p>",
         unsafe_allow_html=True
     )
+    
+    # 仅用于显示评估结果的容器
+    results_display = st.empty()
+    if not submitted and st.session_state.last_evaluation_results:
+        results_display.markdown(st.session_state.last_evaluation_results, unsafe_allow_html=True)
 
-#############################
-# 6. 评估流程（仅当点击评估按钮时更新结果）
-#############################
-if evaluate_button:
-    st.session_state.evaluation_done = True
+
+# 修改if submitted部分的代码结构
+if submitted:
+    # 清空上一次的结果显示
+    results_display.empty()
+    
     params = {
         "h1": h1, "h2": h2, "h3": h3,
         "r1": r1, "r2": r2, "r3": r3, "r4": r4, "r5": r5, "r6": r6,
@@ -670,9 +745,6 @@ if evaluate_button:
         if basic_errors:
             for err in basic_errors:
                 evaluation_results.append({"type": "error", "message": err})
-            # 适当延迟让用户看到加载动画
-            import time
-            time.sleep(2)
         else:
             # 安全性评估
             safety_errors = evaluate_safety(params)
@@ -680,12 +752,8 @@ if evaluate_button:
                 evaluation_results.append({"type": "markdown", "message": "<p style='font-size:18px;'>🚨设施参数设计不符合安全性标准</p>"})
                 for err in safety_errors:
                     evaluation_results.append({"type": "error", "message": err})
-                # 适当延迟让用户看到加载动画
-                import time
-                time.sleep(2)
             else:
                 evaluation_results.append({"type": "success", "message": "✅设施符合安全性标准"})
-            
                 evaluation_results.append({"type": "divider"})
                 
                 # 适用性评估
@@ -726,100 +794,100 @@ if evaluate_button:
                             evaluation_results.append({"type": "markdown", "message": f"<p style='font-size:18px;'>✅{friendly_names.get(key, key)}-易用性良好</p>"})
                         else:
                             evaluation_results.append({"type": "info", "message": f"{result.get('usability_msg')}"})
-                
-                # 适当延迟让用户看到加载动画
-                import time
-                time.sleep(2)
+        
+        # 适当延迟让用户看到加载动画
+        import time
+        time.sleep(2)
+        
+        # ===== 重要：将以下代码移出所有条件分支，确保无论何种情况都会执行 =====
+        
+        # 清除加载动画
+        loading_container.empty()
+        
+        # 添加CSS样式
+        st.markdown("""
+        <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .result-error {
+            padding: 1rem;
+            background-color: #FFEBEE;
+            border-radius: 0.5rem;
+            border-left: 0.3rem solid #F44336;
+            margin-bottom: 1rem;
+            color: #212121;
+            font-size: 16px;
+        }
+        .result-success {
+            padding: 1rem;
+            background-color: #E8F5E9;
+            border-radius: 0.5rem;
+            border-left: 0.3rem solid #4CAF50;
+            margin-bottom: 1rem;
+            color: #212121;
+            font-size: 16px;
+        }
+        .result-warning {
+            padding: 1rem;
+            background-color: #FFF8E1;
+            border-radius: 0.5rem;
+            border-left: 0.3rem solid #FF9800;
+            margin-bottom: 1rem;
+            color: #212121;
+            font-size: 16px;
+        }
+        .result-info {
+            padding: 1rem;
+            background-color: #E3F2FD;
+            border-radius: 0.5rem;
+            border-left: 0.3rem solid #2196F3;
+            margin-bottom: 1rem;
+            color: #212121;
+            font-size: 16px;
+        }
+        .result-divider {
+            height: 1px;
+            background-color: #ccc;
+            border: none;
+            margin: 8px 0;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+        
+        # 构建结果HTML内容
+        html_content = []
+        html_content.append('<div class="fade-in">')
+        
+        # 添加所有评估结果
+        for result in evaluation_results:
+            if result["type"] == "error":
+                html_content.append(f'<div class="result-error">{result["message"]}</div>')
+            elif result["type"] == "success":
+                html_content.append(f'<div class="result-success">{result["message"]}</div>')
+            elif result["type"] == "warning":
+                html_content.append(f'<div class="result-warning">{result["message"]}</div>')
+            elif result["type"] == "info":
+                html_content.append(f'<div class="result-info">{result["message"]}</div>')
+            elif result["type"] == "markdown":
+                html_content.append(f'{result["message"]}')
+            elif result["type"] == "divider":
+                html_content.append('<hr class="result-divider">')
+        
+        # 关闭div标签
+        html_content.append('</div>')
+        
+        # 一次性渲染整个HTML内容
+        complete_html = '\n'.join(html_content)
+        results_display.markdown(complete_html, unsafe_allow_html=True)
+        
+        # 保存结果到session_state
+        st.session_state.last_evaluation_results = complete_html
 
-                # 清除加载动画
-                loading_container.empty()
-
-                # 创建一个空容器显示结果
-                results_container = st.empty()
-
-                # 先单独添加CSS样式部分
-                st.markdown("""
-                <style>
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(10px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                .fade-in {
-                    animation: fadeIn 0.5s ease-out forwards;
-                }
-                .result-error {
-                    padding: 1rem;
-                    background-color: #FFEBEE;
-                    border-radius: 0.5rem;
-                    border-left: 0.3rem solid #F44336;
-                    margin-bottom: 1rem;
-                    color: #212121;
-                    font-size: 16px;
-                }
-                .result-success {
-                    padding: 1rem;
-                    background-color: #E8F5E9;
-                    border-radius: 0.5rem;
-                    border-left: 0.3rem solid #4CAF50;
-                    margin-bottom: 1rem;
-                    color: #212121;
-                    font-size: 16px;
-                }
-                .result-warning {
-                    padding: 1rem;
-                    background-color: #FFF8E1;
-                    border-radius: 0.5rem;
-                    border-left: 0.3rem solid #FF9800;
-                    margin-bottom: 1rem;
-                    color: #212121;
-                    font-size: 16px;
-                }
-                .result-info {
-                    padding: 1rem;
-                    background-color: #E3F2FD;
-                    border-radius: 0.5rem;
-                    border-left: 0.3rem solid #2196F3;
-                    margin-bottom: 1rem;
-                    color: #212121;
-                    font-size: 16px;
-                }
-                .result-divider {
-                    height: 1px;
-                    background-color: #ccc;
-                    border: none;
-                    margin: 8px 0;
-                }
-                </style>
-                """, unsafe_allow_html=True)
-
-                # 构建结果HTML内容（不包含样式和外层div）
-                html_content = []
-
-                # 添加一个隐藏的淡入效果div（不会显示为文本）
-                html_content.append('<div class="fade-in">')
-
-                # 添加所有评估结果
-                for result in evaluation_results:
-                    if result["type"] == "error":
-                        html_content.append(f'<div class="result-error">{result["message"]}</div>')
-                    elif result["type"] == "success":
-                        html_content.append(f'<div class="result-success">{result["message"]}</div>')
-                    elif result["type"] == "warning":
-                        html_content.append(f'<div class="result-warning">{result["message"]}</div>')
-                    elif result["type"] == "info":
-                        html_content.append(f'<div class="result-info">{result["message"]}</div>')
-                    elif result["type"] == "markdown":
-                        html_content.append(f'{result["message"]}')
-                    elif result["type"] == "divider":
-                        html_content.append('<hr class="result-divider">')
-
-                # 关闭div标签
-                html_content.append('</div>')
-
-                # 一次性渲染整个HTML内容
-                complete_html = '\n'.join(html_content)
-                results_container.markdown(complete_html, unsafe_allow_html=True)
-
-                # 如果有基本逻辑错误或安全错误则停止评估
-                if basic_errors or (not basic_errors and safety_errors):
-                    st.stop()
+        # 如果有基本逻辑错误或安全错误则停止评估
+        if basic_errors or (not basic_errors and safety_errors):
+            st.stop()
