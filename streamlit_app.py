@@ -33,7 +33,7 @@ friendly_names = {
 # 1. 页面设置与自定义 CSS
 #############################
 st.set_page_config(page_title="记住我的名字：梁翔(⌐■_■)", layout="wide")
-
+# ...existing code...
 # 立即应用重要的表单样式覆盖
 st.markdown("""
 <style>
@@ -52,7 +52,6 @@ div[data-testid="stForm"] [data-testid="stFormSubmitButton"] {
 </style>
 """, unsafe_allow_html=True)
 
-# ...existing code...
 # 在最顶部的CSS部分添加以下代码，去除form的外框
 custom_css = """
 <style>
@@ -209,8 +208,16 @@ hr.section-divider {
 st.markdown(custom_css, unsafe_allow_html=True)
 # ...existing code...
 st.markdown("""
-<div style="width: 100%; background-color: #F8F8F8; text-align: center; padding: 10px 0; border-bottom: 1px solid #ccc;">
-  <h1 style="margin: 0; font-size:2.5em;">太空漫步机适老化评估系统</h1>
+<style>
+/* 为固定标题预留空间 */
+div.block-container {
+    padding-top: 20px !important; 
+}
+</style>
+
+<div style="position: fixed; top: 0; left: 0; width: 100%; background-color: #F8F8F8; 
+text-align: center; padding: 10px 0; z-index: 1000; border-bottom: 1px solid #ccc;">
+    <h1 style="margin: 0; font-size:2.5em;">太空漫步机适老化评估系统</h1>
 </div>
 """, unsafe_allow_html=True)
 
@@ -686,7 +693,7 @@ if submitted:
                         <div class="dot dot4"></div>
                     </div>
                 </div>
-                <p style="margin-top:20px; font-size:16px; color:#555;">正在评估太空漫步机参数...</p>
+                <p style="margin-top:20px; font-size:16px; color:#555;">正在评估...</p>
             </div>
             
             <style>
