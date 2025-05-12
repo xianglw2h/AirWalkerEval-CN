@@ -32,7 +32,7 @@ friendly_names = {
 #############################
 # 1. 页面设置与自定义 CSS
 #############################
-st.set_page_config(page_title="太空漫步机适老化评估系统", layout="wide")
+st.set_page_config(page_title="太空漫步机适老化评估系统1", layout="wide")
 # ...existing code...
 # 立即应用重要的表单样式覆盖
 st.markdown("""
@@ -107,6 +107,22 @@ custom_css = """
 </style>
 """
 st.markdown(custom_css, unsafe_allow_html=True)
+
+# 在css样式中添加表单的过渡动画，平滑显示/隐藏效果
+st.markdown("""
+<style>
+/* 为form添加平滑过渡效果 */
+form {
+    transition: all 0.3s ease;
+}
+
+/* 确保form提交时布局稳定 */
+div[data-testid="stForm"] {
+    position: relative;
+    z-index: 1; /* 低于固定标题 */
+}
+</style>
+""", unsafe_allow_html=True)
 
 custom_css_top = """
 <style>
