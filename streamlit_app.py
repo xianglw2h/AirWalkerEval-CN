@@ -33,6 +33,25 @@ friendly_names = {
 # 1. 页面设置与自定义 CSS
 #############################
 st.set_page_config(page_title="记住我的名字：梁翔(⌐■_■)", layout="wide")
+
+# 立即应用重要的表单样式覆盖
+st.markdown("""
+<style>
+/* 最高优先级覆盖 */
+div[data-testid="stForm"], 
+div.stForm, 
+div.element-container div.stForm,
+div[data-testid="stForm"] > div,
+div[data-testid="stForm"] [data-testid="stFormSubmitButton"] {
+    border: none !important;
+    padding: 0 !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # ...existing code...
 # 在最顶部的CSS部分添加以下代码，去除form的外框
 custom_css = """
