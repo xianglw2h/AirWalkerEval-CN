@@ -36,7 +36,7 @@ st.set_page_config(page_title="太空漫步及适老化评估系统", layout="wi
 # ...existing code...
 st.markdown("""
 <style>
-/* 固定标题区域 */
+/* 设置极高的z-index确保标题始终在最顶层 */
 .fixed-header {
     position: fixed;
     top: 0;
@@ -45,25 +45,47 @@ st.markdown("""
     background-color: #F8F8F8;
     text-align: center;
     padding: 10px 0;
-    z-index: 9999;
+    z-index: 999999 !important;
     border-bottom: 1px solid #ccc;
 }
 
-/* 为固定标题预留足够空间 */
-.main .block-container {
-    padding-top: 20px !important; 
+/* 创建一个实际的物理占位元素，而不仅仅依赖padding */
+.header-placeholder {
+    display: block;
+    width: 100%;
+    height: 70px; /* 与标题总高度匹配(标题文本+padding) */
+    visibility: hidden;
 }
 
-/* 确保其他内容不会因表单提交而移动 */
-.stApp, .main, [data-testid="stAppViewContainer"] {
+/* 确保内容区不会穿透标题 */
+.main .block-container {
+    padding-top: 0 !important; /* 不使用padding，使用实际占位元素 */
+}
+
+/* 禁用所有可能导致穿透的过渡效果 */
+.element-container, .stForm, form, [data-testid="stForm"] {
+    transition: none !important;
+}
+
+/* 最高优先级重写所有导致内容上移的样式 */
+.stApp, .main, .element-container, [data-testid="stAppViewContainer"] {
     padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+/* 确保所有的元素容器都不会有顶部间距导致内容上移 */
+.element-container, [data-testid="element-container"] {
     margin-top: 0 !important;
 }
 </style>
 
+<!-- 标题元素 -->
 <div class="fixed-header">
     <h1 style="margin: 0; font-size:2.5em;">太空漫步机适老化评估系统</h1>
 </div>
+
+<!-- 物理占位元素确保内容不会上移 -->
+<div class="header-placeholder"></div>
 """, unsafe_allow_html=True)
 # 立即应用重要的表单样式覆盖
 st.markdown("""
