@@ -731,32 +731,94 @@ if evaluate_button:
                 import time
                 time.sleep(2)
         
-
+        # 添加淡入效果的容器
+        results_container = st.empty()
         
         # 清除加载动画
         loading_container.empty()
 
+        # 创建一个新的空容器来显示结果
+        results_container = st.empty()
 
-        
-        # 清空当前结果区域内容
-        placeholder = st.empty()
-        with placeholder.container():
-            # 加载结束后一次性显示所有结果
-            for result in evaluation_results:
-                if result["type"] == "error":
-                    st.error(result["message"])
-                elif result["type"] == "success":
-                    st.success(result["message"])
-                elif result["type"] == "warning":
-                    st.warning(result["message"])
-                elif result["type"] == "info":
-                    st.info(result["message"])
-                elif result["type"] == "markdown":
-                    st.markdown(result["message"], unsafe_allow_html=True)
-                elif result["type"] == "divider":
-                    st.markdown("<hr class='section-divider' style='height:1px; border:none; background:#ccc; margin:0;'>", unsafe_allow_html=True)
-            
-            # 如果有基本逻辑错误或安全错误则停止评估
-            if basic_errors or (not basic_errors and safety_errors):
-                st.stop()
-        
+        # 构建完整的HTML内容（包含CSS和所有结果）
+        html_content = []
+        html_content.append("""
+        <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .result-container {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .result-error {
+            padding: 1rem;
+            background-color: #FFEBEE;
+            border-radius: 0.5rem;
+            border-left: 0.3rem solid #F44336;
+            margin-bottom: 1rem;
+            color: #212121;
+            font-size: 16px;
+        }
+        .result-success {
+            padding: 1rem;
+            background-color: #E8F5E9;
+            border-radius: 0.5rem;
+            border-left: 0.3rem solid #4CAF50;
+            margin-bottom: 1rem;
+            color: #212121;
+            font-size: 16px;
+        }
+        .result-warning {
+            padding: 1rem;
+            background-color: #FFF8E1;
+            border-radius: 0.5rem;
+            border-left: 0.3rem solid #FF9800;
+            margin-bottom: 1rem;
+            color: #212121;
+            font-size: 16px;
+        }
+        .result-info {
+            padding: 1rem;
+            background-color: #E3F2FD;
+            border-radius: 0.5rem;
+            border-left: 0.3rem solid #2196F3;
+            margin-bottom: 1rem;
+            color: #212121;
+            font-size: 16px;
+        }
+        .result-divider {
+            height: 1px;
+            background-color: #ccc;
+            border: none;
+            margin: 8px 0;
+        }
+        </style>
+        <div class="result-container">
+        """)
+
+        # 添加所有评估结果
+        for result in evaluation_results:
+            if result["type"] == "error":
+                html_content.append(f'<div class="result-error">{result["message"]}</div>')
+            elif result["type"] == "success":
+                html_content.append(f'<div class="result-success">{result["message"]}</div>')
+            elif result["type"] == "warning":
+                html_content.append(f'<div class="result-warning">{result["message"]}</div>')
+            elif result["type"] == "info":
+                html_content.append(f'<div class="result-info">{result["message"]}</div>')
+            elif result["type"] == "markdown":
+                html_content.append(f'{result["message"]}')
+            elif result["type"] == "divider":
+                html_content.append('<hr class="result-divider">')
+
+        # 关闭div标签
+        html_content.append('</div>')
+
+        # 一次性渲染整个HTML内容
+        complete_html = '\n'.join(html_content)
+        results_container.markdown(complete_html, unsafe_allow_html=True)
+
+        # 如果有基本逻辑错误或安全错误则停止评估
+        if basic_errors or (not basic_errors and safety_errors):
+            st.stop()
