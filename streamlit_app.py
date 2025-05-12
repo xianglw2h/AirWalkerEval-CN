@@ -28,7 +28,7 @@ friendly_names = {
 #############################
 # 1. 页面设置与自定义 CSS
 #############################
-st.set_page_config(page_title="记住我的名字：翔(⌐■_■)", layout="wide")
+st.set_page_config(page_title="记住我的名字：梁翔(⌐■_■)", layout="wide")
 # ...existing code...
 # ...existing code...
 custom_css_top = """
@@ -40,9 +40,9 @@ footer {visibility: hidden;}
 /* 隐藏右上角的工具栏（可选） */
 [data-testid="stToolbar"] {visibility: hidden;}
 
-/* 给主内容容器增加上边距，预留顶部标题位置 */
+/* 移除主内容容器上边距 */
 div.block-container {
-    padding-top: 80px;
+    padding-top: 0px;
 }
 </style>
 """
@@ -131,7 +131,7 @@ hr.section-divider {
 st.markdown(custom_css, unsafe_allow_html=True)
 # ...existing code...
 st.markdown("""
-<div style="position: fixed; top: 0; left: 0; width: 100%; background-color: #F8F8F8; text-align: center; padding: 10px 0; z-index: 1000; border-bottom: 1px solid #ccc;">
+<div style="width: 100%; background-color: #F8F8F8; text-align: center; padding: 10px 0; border-bottom: 1px solid #ccc;">
   <h1 style="margin: 0; font-size:2.5em;">太空漫步机适老化评估系统</h1>
 </div>
 """, unsafe_allow_html=True)
@@ -144,31 +144,17 @@ custom_css_sidebar = """
 </style>
 """
 st.markdown(custom_css_sidebar, unsafe_allow_html=True)
+
 # 在自定义 CSS 后，添加大标题及贯穿全宽的横线（放于顶端，不嵌套在列中）
 #st.markdown('<h1 class="title-center">太空漫步机适老性评估系统</h1>', unsafe_allow_html=True)
 #st.markdown("<hr style='border: 1px solid #ccc; width: 100%; margin: 0;'>", unsafe_allow_html=True)
 
-# 创建一个完全自定义的侧边栏布局
-st.markdown("""
-<style>
-    /* 完全重置侧边栏样式 */
-    [data-testid="stSidebar"] {
-        padding: 0 !important;
-        margin: 0 !important;
-    }
-    
-    [data-testid="stSidebar"] > div {
-        padding: 0 !important;
-        margin: 0 !important;
-    }
-    
-    [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] {
-        padding: 0.5rem !important;
-        margin: 0 !important;
-    }
-</style>
-""", unsafe_allow_html=True)
-
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 #############################
 # 2. 评估辅助函数
