@@ -5,7 +5,6 @@ from shapely.geometry import Point, MultiPoint
 import os
 import sys
 from image_data import par_base64
-import time
 
 # 在导入部分后，初始化session_state
 if "last_evaluation_results" not in st.session_state:
@@ -33,61 +32,8 @@ friendly_names = {
 #############################
 # 1. 页面设置与自定义 CSS
 #############################
-st.set_page_config(page_title="太空漫步及适老化评估系统", layout="wide")
+st.set_page_config(page_title="记住我的名字：梁翔(⌐■_■)", layout="wide")
 # ...existing code...
-st.markdown("""
-<style>
-/* 设置极高的z-index确保标题始终在最顶层 */
-.fixed-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: #F8F8F8;
-    text-align: center;
-    padding: 10px 0;
-    z-index: 999999 !important;
-    border-bottom: 1px solid #ccc;
-}
-
-/* 创建一个实际的物理占位元素，而不仅仅依赖padding */
-.header-placeholder {
-    display: block;
-    width: 100%;
-    height: 20px; /* 与标题总高度匹配(标题文本+padding) */
-    visibility: hidden;
-}
-
-/* 确保内容区不会穿透标题 */
-.main .block-container {
-    padding-top: 0 !important; /* 不使用padding，使用实际占位元素 */
-}
-
-/* 禁用所有可能导致穿透的过渡效果 */
-.element-container, .stForm, form, [data-testid="stForm"] {
-    transition: none !important;
-}
-
-/* 最高优先级重写所有导致内容上移的样式 */
-.stApp, .main, .element-container, [data-testid="stAppViewContainer"] {
-    padding-top: 0 !important;
-    margin-top: 0 !important;
-}
-
-/* 确保所有的元素容器都不会有顶部间距导致内容上移 */
-.element-container, [data-testid="element-container"] {
-    margin-top: 0 !important;
-}
-</style>
-
-<!-- 标题元素 -->
-<div class="fixed-header">
-    <h1 style="margin: 0; font-size:2.5em;">太空漫步机适老化评估系统</h1>
-</div>
-
-<!-- 物理占位元素确保内容不会上移 -->
-<div class="header-placeholder"></div>
-""", unsafe_allow_html=True)
 # 立即应用重要的表单样式覆盖
 st.markdown("""
 <style>
@@ -260,7 +206,20 @@ hr.section-divider {
 </style>
 """
 st.markdown(custom_css, unsafe_allow_html=True)
+# ...existing code...
+st.markdown("""
+<style>
+/* 为固定标题预留空间 */
+div.block-container {
+    padding-top: 20px !important; 
+}
+</style>
 
+<div style="position: fixed; top: 0; left: 0; width: 100%; background-color: #F8F8F8; 
+text-align: center; padding: 10px 0; z-index: 1000; border-bottom: 1px solid #ccc;">
+    <h1 style="margin: 0; font-size:2.5em;">太空漫步机适老化评估系统</h1>
+</div>
+""", unsafe_allow_html=True)
 
 custom_css_sidebar = """
 <style>
