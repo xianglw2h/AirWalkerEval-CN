@@ -50,17 +50,6 @@ st.markdown(custom_css_top, unsafe_allow_html=True)
 
 st.markdown("""
 <style>
-    [data-testid="stSidebar"] > div:first-child {
-        padding-top: 0rem;
-    }
-    [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] > div:first-child {
-        margin-top: 0rem;
-    }
-</style>
-""", unsafe_allow_html=True)
-
-st.markdown("""
-<style>
 div[role="alert"] {
     font-size: 18px !important;
 }
@@ -159,6 +148,26 @@ st.markdown(custom_css_sidebar, unsafe_allow_html=True)
 #st.markdown('<h1 class="title-center">太空漫步机适老性评估系统</h1>', unsafe_allow_html=True)
 #st.markdown("<hr style='border: 1px solid #ccc; width: 100%; margin: 0;'>", unsafe_allow_html=True)
 
+# 创建一个完全自定义的侧边栏布局
+st.markdown("""
+<style>
+    /* 完全重置侧边栏样式 */
+    [data-testid="stSidebar"] {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    [data-testid="stSidebar"] > div {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] {
+        padding: 0.5rem !important;
+        margin: 0 !important;
+    }
+</style>
+""", unsafe_allow_html=True)
 
 
 #############################
