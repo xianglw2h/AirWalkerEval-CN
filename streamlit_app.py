@@ -578,76 +578,158 @@ if evaluate_button:
     }
     
     with col_output:
-        # 使用spinner显示加载动画
-        with st.spinner("正在评估中..."):
-            # 创建一个列表来收集所有评估结果
-            evaluation_results = []
+        # 创建自定义加载动画
+        loading_container = st.empty()
+        loading_container.markdown(
+            """
+            <div style="display:flex; flex-direction:column; align-items:center; margin:30px 0;">
+                <!-- 动态加载动画 -->
+                <div class="loader-container">
+                    <div class="dot-loader">
+                        <div class="dot dot1"></div>
+                        <div class="dot dot2"></div>
+                        <div class="dot dot3"></div>
+                        <div class="dot dot4"></div>
+                    </div>
+                </div>
+                <p style="margin-top:20px; font-size:16px; color:#555;">正在评估太空漫步机参数...</p>
+            </div>
             
-            # 基本逻辑评估
-            basic_errors = evaluate_basic_logic(params)
-            if basic_errors:
-                for err in basic_errors:
+            <style>
+            /* 点式加载动画 */
+            .loader-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100px;
+            }
+            
+            .dot-loader {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                width: 120px;
+                height: 40px;
+            }
+            
+            .dot {
+                position: absolute;
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                background-color: #FFCA28;
+                animation: dotAnimation 1.4s ease-in-out infinite;
+            }
+            
+            .dot1 {
+                left: 10px;
+                animation-delay: 0s;
+            }
+            
+            .dot2 {
+                left: 40px;
+                animation-delay: 0.2s;
+            }
+            
+            .dot3 {
+                left: 70px;
+                animation-delay: 0.4s;
+            }
+            
+            .dot4 {
+                left: 100px;
+                animation-delay: 0.6s;
+            }
+            
+            @keyframes dotAnimation {
+                0%, 100% {
+                    transform: translateY(0);
+                    background-color: #FFCA28;
+                    width: 16px;
+                    height: 16px;
+                }
+                50% {
+                    transform: translateY(-20px);
+                    background-color: #FFA000;
+                    width: 20px;
+                    height: 20px;
+                    box-shadow: 0 4px 8px rgba(255, 160, 0, 0.3);
+                }
+            }
+            </style>
+            """, 
+            unsafe_allow_html=True
+        )
+        
+        # 创建一个列表来收集所有评估结果
+        evaluation_results = []
+        
+        # 基本逻辑评估
+        basic_errors = evaluate_basic_logic(params)
+        if basic_errors:
+            for err in basic_errors:
+                evaluation_results.append({"type": "error", "message": err})
+            # 适当延迟让用户看到加载动画
+            import time
+            time.sleep(2)
+        else:
+            # 安全性评估
+            safety_errors = evaluate_safety(params)
+            if safety_errors:
+                evaluation_results.append({"type": "markdown", "message": "<p style='font-size:18px;'>🚨设施参数设计不符合安全性标准</p>"})
+                for err in safety_errors:
                     evaluation_results.append({"type": "error", "message": err})
-                # 短暂延迟让加载动画更明显
+                # 适当延迟让用户看到加载动画
                 import time
-                time.sleep(1)
+                time.sleep(2)
             else:
-                # 安全性评估
-                safety_errors = evaluate_safety(params)
-                if safety_errors:
-                    evaluation_results.append({"type": "markdown", "message": "<p style='font-size:18px;'>🚨设施参数设计不符合安全性标准</p>"})
-                    for err in safety_errors:
-                        evaluation_results.append({"type": "error", "message": err})
-                    # 短暂延迟让加载动画更明显
-                    import time
-                    time.sleep(1)
-                else:
-                    evaluation_results.append({"type": "success", "message": "✅设施符合安全性标准"})
+                evaluation_results.append({"type": "success", "message": "✅设施符合安全性标准"})
+            
+                evaluation_results.append({"type": "divider"})
                 
-                    evaluation_results.append({"type": "divider"})
-                    
-                    # 适用性评估
-                    suit_results = evaluate_suitability_detail(params)
-                    suit_results = evaluate_usability_comfort_detail(params, suit_results)
-                    
-                    groups = {
-                        "扶手": ["h1", "h2", "grip"],
-                        "摆杆": ["r1", "r2", "r3", "r4", "r6"],
-                        "踏板": ["p2", "p3", "p5_p6", "p3_p4"],
-                    }
-                    
-                    for comp, keys in groups.items():
-                        comp_pass = all(suit_results.get(key, {}).get("suitability_pass", False) for key in keys)
-                        if comp_pass:
-                            evaluation_results.append({"type": "markdown", "message": f"<p style='font-size:18px;'>✅{comp}部分适用性良好</p>"})
+                # 适用性评估
+                suit_results = evaluate_suitability_detail(params)
+                suit_results = evaluate_usability_comfort_detail(params, suit_results)
+                
+                groups = {
+                    "扶手": ["h1", "h2", "grip"],
+                    "摆杆": ["r1", "r2", "r3", "r4", "r6"],
+                    "踏板": ["p2", "p3", "p5_p6", "p3_p4"],
+                }
+                
+                for comp, keys in groups.items():
+                    comp_pass = all(suit_results.get(key, {}).get("suitability_pass", False) for key in keys)
+                    if comp_pass:
+                        evaluation_results.append({"type": "markdown", "message": f"<p style='font-size:18px;'>✅{comp}部分适用性良好</p>"})
+                    else:
+                        for key in keys:
+                            if key in suit_results and not suit_results[key].get("suitability_pass", False):
+                                evaluation_results.append({"type": "warning", "message": f"{suit_results[key].get('suitability_msg')}"})
+                
+                evaluation_results.append({"type": "divider"})
+
+                # 舒适性评估（仅适用性通过的参数）
+                for key, result in suit_results.items():
+                    if result.get("suitability_pass", False) and "comfort_pass" in result:
+                        if result["comfort_pass"]:
+                            evaluation_results.append({"type": "markdown", "message": f"<p style='font-size:18px;'>✅{friendly_names.get(key, key)}使用舒适</p>"})
                         else:
-                            for key in keys:
-                                if key in suit_results and not suit_results[key].get("suitability_pass", False):
-                                    evaluation_results.append({"type": "warning", "message": f"{suit_results[key].get('suitability_msg')}"})
-                    
-                    evaluation_results.append({"type": "divider"})
+                            evaluation_results.append({"type": "info", "message": f"{result.get('comfort_msg')}"})
 
-                    # 舒适性评估（仅适用性通过的参数）
-                    for key, result in suit_results.items():
-                        if result.get("suitability_pass", False) and "comfort_pass" in result:
-                            if result["comfort_pass"]:
-                                evaluation_results.append({"type": "markdown", "message": f"<p style='font-size:18px;'>✅{friendly_names.get(key, key)}使用舒适</p>"})
-                            else:
-                                evaluation_results.append({"type": "info", "message": f"{result.get('comfort_msg')}"})
-
-                    evaluation_results.append({"type": "divider"})
-                    
-                    # 易用性评估（仅适用性通过的参数）
-                    for key, result in suit_results.items():
-                        if result.get("suitability_pass", False) and "usability_pass" in result:
-                            if result["usability_pass"]:
-                                evaluation_results.append({"type": "markdown", "message": f"<p style='font-size:18px;'>✅{friendly_names.get(key, key)}-易用性良好</p>"})
-                            else:
-                                evaluation_results.append({"type": "info", "message": f"{result.get('usability_msg')}"})
-                    
-                    # 小延迟让加载动画更明显
-                    import time
-                    time.sleep(1)
+                evaluation_results.append({"type": "divider"})
+                
+                # 易用性评估（仅适用性通过的参数）
+                for key, result in suit_results.items():
+                    if result.get("suitability_pass", False) and "usability_pass" in result:
+                        if result["usability_pass"]:
+                            evaluation_results.append({"type": "markdown", "message": f"<p style='font-size:18px;'>✅{friendly_names.get(key, key)}-易用性良好</p>"})
+                        else:
+                            evaluation_results.append({"type": "info", "message": f"{result.get('usability_msg')}"})
+                
+                # 适当延迟让用户看到加载动画
+                import time
+                time.sleep(2)
         
         # 清空当前结果区域内容
         placeholder = st.empty()
