@@ -730,95 +730,90 @@ if evaluate_button:
                 # 适当延迟让用户看到加载动画
                 import time
                 time.sleep(2)
-        
-        # 添加淡入效果的容器
-        results_container = st.empty()
-        
-        # 清除加载动画
-        loading_container.empty()
 
-        # 创建一个新的空容器来显示结果
-        results_container = st.empty()
+                # 清除加载动画
+                loading_container.empty()
 
-        # 构建完整的HTML内容（包含CSS和所有结果）
-        html_content = []
-        html_content.append("""
-        <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .result-container {
-            animation: fadeIn 0.5s ease-out forwards;
-        }
-        .result-error {
-            padding: 1rem;
-            background-color: #FFEBEE;
-            border-radius: 0.5rem;
-            border-left: 0.3rem solid #F44336;
-            margin-bottom: 1rem;
-            color: #212121;
-            font-size: 16px;
-        }
-        .result-success {
-            padding: 1rem;
-            background-color: #E8F5E9;
-            border-radius: 0.5rem;
-            border-left: 0.3rem solid #4CAF50;
-            margin-bottom: 1rem;
-            color: #212121;
-            font-size: 16px;
-        }
-        .result-warning {
-            padding: 1rem;
-            background-color: #FFF8E1;
-            border-radius: 0.5rem;
-            border-left: 0.3rem solid #FF9800;
-            margin-bottom: 1rem;
-            color: #212121;
-            font-size: 16px;
-        }
-        .result-info {
-            padding: 1rem;
-            background-color: #E3F2FD;
-            border-radius: 0.5rem;
-            border-left: 0.3rem solid #2196F3;
-            margin-bottom: 1rem;
-            color: #212121;
-            font-size: 16px;
-        }
-        .result-divider {
-            height: 1px;
-            background-color: #ccc;
-            border: none;
-            margin: 8px 0;
-        }
-        </style>
-        <div class="result-container">
-        """)
+                # 准备用于显示结果的容器
+                results_container = st.container()
 
-        # 添加所有评估结果
-        for result in evaluation_results:
-            if result["type"] == "error":
-                html_content.append(f'<div class="result-error">{result["message"]}</div>')
-            elif result["type"] == "success":
-                html_content.append(f'<div class="result-success">{result["message"]}</div>')
-            elif result["type"] == "warning":
-                html_content.append(f'<div class="result-warning">{result["message"]}</div>')
-            elif result["type"] == "info":
-                html_content.append(f'<div class="result-info">{result["message"]}</div>')
-            elif result["type"] == "markdown":
-                html_content.append(f'{result["message"]}')
-            elif result["type"] == "divider":
-                html_content.append('<hr class="result-divider">')
+                # 一次性在容器中显示所有结果
+                with results_container:
+                    # 先把所有数据准备好，但暂不显示
+                    all_results = []
+                    
+                    # 基础错误信息
+                    if basic_errors:
+                        for err in basic_errors:
+                            all_results.append(("error", err))
+                    # 安全性评估
+                    elif safety_errors:
+                        all_results.append(("markdown", "<p style='font-size:18px;'>🚨设施参数设计不符合安全性标准</p>"))
+                        for err in safety_errors:
+                            all_results.append(("error", err))
+                    # 详细评估结果
+                    else:
+                        all_results.append(("success", "✅设施符合安全性标准"))
+                        all_results.append(("divider", None))
+                        
+                        # 适用性评估结果
+                        for comp, keys in groups.items():
+                            comp_pass = all(suit_results.get(key, {}).get("suitability_pass", False) for key in keys)
+                            if comp_pass:
+                                all_results.append(("markdown", f"<p style='font-size:18px;'>✅{comp}部分适用性良好</p>"))
+                            else:
+                                for key in keys:
+                                    if key in suit_results and not suit_results[key].get("suitability_pass", False):
+                                        all_results.append(("warning", suit_results[key].get('suitability_msg')))
+                        
+                        all_results.append(("divider", None))
+                        
+                        # 舒适性评估结果
+                        for key, result in suit_results.items():
+                            if result.get("suitability_pass", False) and "comfort_pass" in result:
+                                if result["comfort_pass"]:
+                                    all_results.append(("markdown", f"<p style='font-size:18px;'>✅{friendly_names.get(key, key)}使用舒适</p>"))
+                                else:
+                                    all_results.append(("info", result.get('comfort_msg')))
+                        
+                        all_results.append(("divider", None))
+                        
+                        # 易用性评估结果
+                        for key, result in suit_results.items():
+                            if result.get("suitability_pass", False) and "usability_pass" in result:
+                                if result["usability_pass"]:
+                                    all_results.append(("markdown", f"<p style='font-size:18px;'>✅{friendly_names.get(key, key)}-易用性良好</p>"))
+                                else:
+                                    all_results.append(("info", result.get('usability_msg')))
+                    
+                    # 添加内容渐入的CSS效果
+                    st.markdown("""
+                    <style>
+                    .element-container {
+                    animation: fadeIn 0.5s ease-out forwards;
+                    }
+                    @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(10px); }
+                    to { opacity: 1; transform: translateY(0); }
+                    }
+                    </style>
+                    """, unsafe_allow_html=True)
+                    
+                    # 一次性显示所有结果
+                    for result_type, message in all_results:
+                        if result_type == "error":
+                            st.error(message)
+                        elif result_type == "success":
+                            st.success(message)
+                        elif result_type == "warning":
+                            st.warning(message)
+                        elif result_type == "info":
+                            st.info(message)
+                        elif result_type == "markdown":
+                            st.markdown(message, unsafe_allow_html=True)
+                        elif result_type == "divider":
+                            st.markdown("<hr style='height:1px; border:none; background:#ccc; margin:8px 0;'>", unsafe_allow_html=True)
 
-        # 关闭div标签
-        html_content.append('</div>')
-
-        # 一次性渲染整个HTML内容
-        complete_html = '\n'.join(html_content)
-        results_container.markdown(complete_html, unsafe_allow_html=True)
-
-        # 如果有基本逻辑错误或安全错误则停止评估
-        if basic_errors or (not basic_errors and safety_errors):
-            st.stop()
+                # 如果有基本逻辑错误或安全错误则停止评估
+                if basic_errors or (not basic_errors and safety_errors):
+                    st.stop()
