@@ -85,32 +85,34 @@ def check_password():
     div[role="alert"] {
         font-family: "SimSun", "NSimSun", "宋体", serif !important;
     }
+    /* 添加居中辅助样式 */
+    .center-button-container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
     </style>
     """, unsafe_allow_html=True)
-    
-    # ... 其余代码保持不变
     
     st.markdown("<h1 style='text-align: center; font-size: 1.5em; font-family: \"SimSun\", \"NSimSun\", \"宋体\", serif;'>太空漫步机适老化评估系统</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; font-family: \"SimSun\", \"NSimSun\", \"宋体\", serif;'>输入正确的密码才能访问哟ಥ_ಥ</p>", unsafe_allow_html=True)
     
-    # 使用列布局使内容居中显示
+    # 使用更简单的布局方式
     col1, col2, col3 = st.columns([1,2,1])
     
     with col2:
         # 使用普通输入框
         password = st.text_input("", type="password", key="password_input")
         
-        # 创建一个容器用于放置按钮
-        button_container = st.container()
-        # 在容器内创建三列，将按钮放在中间列
-        btn_cols = button_container.columns([4, 2, 4])
-        with btn_cols[1]:
-            if st.button("确定", key="submit_button"):
-                if password == correct_password:
-                    st.session_state.password_correct = True
-                    st.rerun()
-                else:
-                    st.error("⛔密码不正确，请重试")
+        # 添加HTML标记以实现更精确的居中
+        st.markdown("<div class='center-button-container'>", unsafe_allow_html=True)
+        if st.button("确定", key="submit_button"):
+            if password == correct_password:
+                st.session_state.password_correct = True
+                st.rerun()
+            else:
+                st.error("⛔密码不正确，请重试")
+        st.markdown("</div>", unsafe_allow_html=True)
     
     return False
 
