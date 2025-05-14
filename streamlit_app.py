@@ -32,7 +32,7 @@ friendly_names = {
 #############################
 # 1. 页面设置与自定义 CSS
 #############################
-st.set_page_config(page_title="欢迎使用系统1(⌐■_■)", layout="wide")
+st.set_page_config(page_title="欢迎使用系统(⌐■_■)", layout="wide")
 # ...existing code...
 st.markdown(
     """
@@ -878,7 +878,7 @@ if submitted:
             animation: fadeIn 0.5s ease-out forwards;
         }
         .result-error {
-            padding: 1rem;
+            padding: 0.5rem;
             background-color: #FFEBEE;
             border-radius: 0.5rem;
             border-left: 0.3rem solid #F44336;
@@ -887,7 +887,7 @@ if submitted:
             font-size: 16px;
         }
         .result-success {
-            padding: 1rem;
+            padding: 0.5rem;
             background-color: #E8F5E9;
             border-radius: 0.5rem;
             border-left: 0.3rem solid #4CAF50;
@@ -896,7 +896,7 @@ if submitted:
             font-size: 16px;
         }
         .result-warning {
-            padding: 1rem;
+            padding: 0.5rem;
             background-color: #FFF8E1;
             border-radius: 0.5rem;
             border-left: 0.3rem solid #FF9800;
@@ -905,7 +905,7 @@ if submitted:
             font-size: 16px;
         }
         .result-info {
-            padding: 1rem;
+            padding: 0.5rem;
             background-color: #E3F2FD;
             border-radius: 0.5rem;
             border-left: 0.3rem solid #2196F3;
@@ -917,7 +917,7 @@ if submitted:
             height: 1px;
             background-color: #ccc;
             border: none;
-            margin: 0px 0;
+            margin: 8px 0;
         }
         </style>
         """, unsafe_allow_html=True)
