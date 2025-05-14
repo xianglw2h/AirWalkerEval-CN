@@ -5,6 +5,45 @@ from shapely.geometry import Point, MultiPoint
 import os
 import sys
 from image_data import par_base64
+import os
+
+# 在导入部分后，添加密码保护功能
+def check_password():
+    """返回`True`如果用户输入了正确的密码."""
+    
+    # 从环境变量获取密码
+    correct_password = os.environ.get("APP_PASSWORD")
+    
+    if correct_password is None:
+        st.error("管理员未设置密码。请联系管理员设置APP_PASSWORD环境变量。")
+        return False
+    
+    if "password_correct" not in st.session_state:
+        st.session_state.password_correct = False
+        
+    if st.session_state.password_correct:
+        return True
+    
+    st.markdown("<h1 style='text-align: center;'>太空漫步机适老化评估系统</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center;'>请输入访问密码</p>", unsafe_allow_html=True)
+    
+    col1, col2, col3 = st.columns([1,2,1])
+    with col2:
+        password = st.text_input("密码:", type="password")
+        if password == correct_password:
+            st.session_state.password_correct = True
+            st.rerun()
+        elif password:
+            st.error("❌ 密码不正确，请重试")
+            return False
+        else:
+            return False
+            
+    return False
+
+# 在您的主应用代码前添加密码检查
+if not check_password():
+    st.stop()  # 如果密码不正确，停止应用的其余部分
 
 # 在导入部分后，初始化session_state
 if "last_evaluation_results" not in st.session_state:
