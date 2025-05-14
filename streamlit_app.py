@@ -32,7 +32,7 @@ friendly_names = {
 #############################
 # 1. 页面设置与自定义 CSS
 #############################
-st.set_page_config(page_title="欢迎使用系统(⌐■_■)", layout="wide")
+st.set_page_config(page_title="欢迎使用系统1(⌐■_■)", layout="wide")
 # ...existing code...
 st.markdown(
     """
