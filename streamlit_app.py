@@ -17,6 +17,7 @@ import sys
 from image_data import par_base64
 import os
 
+
 # 在导入部分后，添加密码保护功能
 def check_password():
     """返回`True`如果用户输入了正确的密码."""
@@ -49,24 +50,35 @@ def check_password():
         transition: background-color 0.3s ease, color 0.3s ease !important;
         margin: 0 auto !important; /* 水平居中 */
         display: block !important;
+        font-family: "SimSun", "NSimSun", "宋体", serif !important;
     }
     
     div.stButton > button:hover {
         background-color: #FFA000 !important; 
         color: white !important;
     }
+    
+    /* 仅对标签应用宋体字体，不影响输入框内部 */
+    div[data-testid="stTextInput"] label {
+        font-family: "SimSun", "NSimSun", "宋体", serif !important;
+    }
+    
+    /* 错误消息使用宋体 */
+    div[role="alert"] {
+        font-family: "SimSun", "NSimSun", "宋体", serif !important;
+    }
     </style>
     """, unsafe_allow_html=True)
     
-    st.markdown("<h1 style='text-align: center; font-size: 1.5em;'>太空漫步机适老化评估系统</h1>", unsafe_allow_html=True)
-#    st.markdown("<p style='text-align: center;'>请输入访问密码</p>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; font-size: 1.5em; font-family: \"SimSun\", \"NSimSun\", \"宋体\", serif;'>太空漫步机适老化评估系统</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; font-family: \"SimSun\", \"NSimSun\", \"宋体\", serif;'>输入正确的密码才能访问哟ಥ_ಥ</p>", unsafe_allow_html=True)
     
     # 使用列布局使内容居中显示
     col1, col2, col3 = st.columns([1,2,1])
     
     with col2:
         # 使用普通输入框
-        password = st.text_input("输入正确的密码才能访问哟ಥ_ಥ", type="password", key="password_input")
+        password = st.text_input("", type="password", key="password_input")
         
         # 创建一个容器用于放置按钮
         button_container = st.container()
