@@ -89,7 +89,7 @@ def check_password():
     """, unsafe_allow_html=True)
     
     st.markdown("<h1 style='text-align: center; font-size: 1.5em; font-family: \"SimSun\", \"NSimSun\", \"宋体\", serif;'>太空漫步机适老化评估系统</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; font-family: \"SimSun\", \"NSimSun\", \"宋体\", serif;'>输入正确的密码才能访问哟ಥ_ಥ</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; font-family: \"SimSun\", \"NSimSun\", \"宋体\", serif;'>请输入访问密码</p>", unsafe_allow_html=True)
     
     # 使用更简单的布局方式
     col1, col2, col3 = st.columns([1,2,1])
