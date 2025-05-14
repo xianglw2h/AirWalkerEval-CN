@@ -31,20 +31,7 @@ def check_password():
     if st.session_state.password_correct:
         return True
     
-    # 修改按钮CSS样式，设置更小的宽度
-def check_password():
-    """返回`True`如果用户输入了正确的密码."""
-    
-    # 从环境变量获取密码
-    correct_password = os.environ.get("APP_PASSWORD", "test")  # 添加默认密码用于测试
-    
-    if "password_correct" not in st.session_state:
-        st.session_state.password_correct = False
-        
-    if st.session_state.password_correct:
-        return True
-    
-    # 修改按钮CSS样式，设置更小的宽度
+    # 创建自定义错误消息样式
     st.markdown("""
     <style>
     /* 修改按钮样式，设置较小的宽度并使用宋体 */
@@ -81,21 +68,28 @@ def check_password():
         font-family: "SimSun", "NSimSun", "宋体", serif !important;
     }
     
-    /* 错误消息使用宋体 */
-    div[role="alert"] {
+    /* 自定义错误消息样式 */
+    .custom-error-msg {
+        color: #D32F2F;
         font-family: "SimSun", "NSimSun", "宋体", serif !important;
+        text-align: center;
+        margin: 8px 0;
+        font-size: 0.9em;
+        font-weight: normal;
     }
+    
     /* 添加居中辅助样式 */
     .center-button-container {
         display: flex;
         justify-content: center;
         width: 100%;
+        margin-top: 10px;
     }
     </style>
     """, unsafe_allow_html=True)
     
     st.markdown("<h1 style='text-align: center; font-size: 1.5em; font-family: \"SimSun\", \"NSimSun\", \"宋体\", serif;'>太空漫步机适老化评估系统</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; font-family: \"SimSun\", \"NSimSun\", \"宋体\", serif;'>请输入访问密码</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; font-family: \"SimSun\", \"NSimSun\", \"宋体\", serif;'>输入正确的密码才能访问哟ಥ_ಥ</p>", unsafe_allow_html=True)
     
     # 使用更简单的布局方式
     col1, col2, col3 = st.columns([1,2,1])
@@ -104,15 +98,22 @@ def check_password():
         # 使用普通输入框
         password = st.text_input("", type="password", key="password_input")
         
+        # 创建一个容器用于显示错误消息
+        error_placeholder = st.empty()
+        
         # 添加HTML标记以实现更精确的居中
         st.markdown("<div class='center-button-container'>", unsafe_allow_html=True)
-        if st.button("确定", key="submit_button"):
+        submitted = st.button("确定", key="submit_button")
+        st.markdown("</div>", unsafe_allow_html=True)
+        
+        # 判断密码并显示错误
+        if submitted:
             if password == correct_password:
                 st.session_state.password_correct = True
                 st.rerun()
             else:
-                st.error("⛔密码不正确，请重试")
-        st.markdown("</div>", unsafe_allow_html=True)
+                # 使用自定义HTML显示错误消息，确保使用宋体
+                error_placeholder.markdown("<p class='custom-error-msg'>⛔ 密码不正确，请重试</p>", unsafe_allow_html=True)
     
     return False
 
