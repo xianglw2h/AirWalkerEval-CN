@@ -244,6 +244,8 @@ def resource_path(relative_path):
 #############################
 # 2. 评估辅助函数
 #############################
+# filepath: c:\Users\87257\Desktop\太空漫步机适老化评估系统\0513.py
+@st.cache_data(show_spinner=False)
 def get_region_convex_hull(h1, A, B, C, constant, num_samples=20000):
     points = []
     for _ in range(num_samples):
