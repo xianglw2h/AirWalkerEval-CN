@@ -24,13 +24,48 @@ def check_password():
     if st.session_state.password_correct:
         return True
     
+    # 为密码表单添加无边框样式
+    st.markdown("""
+    <style>
+    /* 专门针对密码表单的样式覆盖 */
+    div[data-testid="stForm"][key="password_form"], 
+    div[data-testid="stForm"][key="password_form"] > div,
+    div[data-testid="stForm"][key="password_form"] [data-testid="stFormSubmitButton"] {
+        border: none !important;
+        padding: 0 !important;
+        background-color: transparent !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+    }
+    
+    /* 保持按钮样式一致 */
+    div[data-testid="stForm"][key="password_form"] [data-testid="stFormSubmitButton"] button {
+        width: 100%;
+        background-color: #FFCA28 !important; 
+        color: black !important;
+        border-radius: 8px !important;
+        padding: 0.8em 1.8em !important;
+        border: none !important;
+        font-size: 1.2em !important;
+        font-weight: bold !important;
+        cursor: pointer !important;
+        transition: background-color 0.3s ease, color 0.3s ease !important;
+    }
+    
+    div[data-testid="stForm"][key="password_form"] [data-testid="stFormSubmitButton"] button:hover {
+        background-color: #FFA000 !important;
+        color: white !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
     st.markdown("<h1 style='text-align: center; font-size: 1.5em;'>太空漫步机适老化评估系统</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center;'>请输入访问密码</p>", unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns([1,2,1])
     with col2:
         # 使用表单来确保有提交按钮
-        with st.form("password_form"):
+        with st.form(key="password_form"):
             password = st.text_input("密码:", type="password")
             submitted = st.form_submit_button("确定")
             
