@@ -155,7 +155,7 @@ footer {visibility: hidden;}
 
 /* 移除主内容容器上边距，保留一些空间给header */
 div.block-container {
-    padding-top: 0.2rem !important;
+    padding-top: 0.1rem !important;
 }
 </style>
 """
@@ -812,7 +812,7 @@ if submitted:
             # 安全性评估
             safety_errors = evaluate_safety(params)
             if safety_errors:
-                evaluation_results.append({"type": "markdown", "message": "<p style='font-size:18px;'>🚨设施参数设计不符合安全性标准</p>"})
+                evaluation_results.append({"type": "markdown", "message": "<p style='font-size:16px;'>🚨设施参数设计不符合安全性标准</p>"})
                 for err in safety_errors:
                     evaluation_results.append({"type": "error", "message": err})
             else:
@@ -832,7 +832,7 @@ if submitted:
                 for comp, keys in groups.items():
                     comp_pass = all(suit_results.get(key, {}).get("suitability_pass", False) for key in keys)
                     if comp_pass:
-                        evaluation_results.append({"type": "markdown", "message": f"<p style='font-size:18px;'>✴️ {comp}部分适用性良好</p>"})
+                        evaluation_results.append({"type": "markdown", "message": f"<p style='font-size:16px;'>✴️ {comp}部分适用性良好</p>"})
                     else:
                         for key in keys:
                             if key in suit_results and not suit_results[key].get("suitability_pass", False):
@@ -844,7 +844,7 @@ if submitted:
                 for key, result in suit_results.items():
                     if result.get("suitability_pass", False) and "comfort_pass" in result:
                         if result["comfort_pass"]:
-                            evaluation_results.append({"type": "markdown", "message": f"<p style='font-size:18px;'>🅿️ {friendly_names.get(key, key)}使用舒适</p>"})
+                            evaluation_results.append({"type": "markdown", "message": f"<p style='font-size:16px;'>🅿️ {friendly_names.get(key, key)}使用舒适</p>"})
                         else:
                             evaluation_results.append({"type": "info", "message": f"{result.get('comfort_msg')}"})
 
@@ -854,7 +854,7 @@ if submitted:
                 for key, result in suit_results.items():
                     if result.get("suitability_pass", False) and "usability_pass" in result:
                         if result["usability_pass"]:
-                            evaluation_results.append({"type": "markdown", "message": f"<p style='font-size:18px;'>🅿️ {friendly_names.get(key, key)}-易用性良好</p>"})
+                            evaluation_results.append({"type": "markdown", "message": f"<p style='font-size:16px;'>🅿️ {friendly_names.get(key, key)}-易用性良好</p>"})
                         else:
                             evaluation_results.append({"type": "info", "message": f"{result.get('usability_msg')}"})
         
