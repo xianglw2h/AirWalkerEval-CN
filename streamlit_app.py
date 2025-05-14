@@ -32,9 +32,28 @@ friendly_names = {
 #############################
 # 1. 页面设置与自定义 CSS
 #############################
-st.set_page_config(page_title="欢迎使用评估系统(⌐■_■)", layout="wide")
+st.set_page_config(page_title="欢迎使用评估系统哈哈(⌐■_■)", layout="wide")
 # ...existing code...
-import streamlit as st
+# filepath: c:\Users\87257\Desktop\太空漫步机适老化评估系统\0514.py
+st.markdown(
+    """
+    <style>
+    body {
+        opacity: 0;
+        transition: opacity 0.5s ease-in;
+    }
+    body.loaded {
+        opacity: 1;
+    }
+    </style>
+    <script>
+    window.addEventListener('load', function() {
+        document.body.classList.add('loaded');
+    });
+    </script>
+    """, 
+    unsafe_allow_html=True
+)
 
 # 最早加载CSS，预加载标题样式，保证标题区域固定
 st.markdown(
