@@ -32,8 +32,22 @@ friendly_names = {
 #############################
 # 1. 页面设置与自定义 CSS
 #############################
-st.set_page_config(page_title="你好(⌐■_■)欢迎使用软件！", layout="wide")
+st.set_page_config(page_title="欢迎使用评估系统(⌐■_■)", layout="wide")
 # ...existing code...
+# ...existing code...
+st.markdown("""
+<style>
+/* 为固定标题预留空间 */
+div.block-container {
+    padding-top: 20px !important; 
+}
+</style>
+
+<div style="position: fixed; top: 0; left: 0; width: 100%; background-color: #F8F8F8; 
+text-align: center; padding: 10px 0; z-index: 1000; border-bottom: 1px solid #ccc;">
+    <h1 style="margin: 0; font-size:2.5em;">太空漫步机适老化评估系统</h1>
+</div>
+""", unsafe_allow_html=True)
 # 立即应用重要的表单样式覆盖
 st.markdown("""
 <style>
@@ -206,20 +220,7 @@ hr.section-divider {
 </style>
 """
 st.markdown(custom_css, unsafe_allow_html=True)
-# ...existing code...
-st.markdown("""
-<style>
-/* 为固定标题预留空间 */
-div.block-container {
-    padding-top: 20px !important; 
-}
-</style>
 
-<div style="position: fixed; top: 0; left: 0; width: 100%; background-color: #F8F8F8; 
-text-align: center; padding: 10px 0; z-index: 1000; border-bottom: 1px solid #ccc;">
-    <h1 style="margin: 0; font-size:2.5em;">太空漫步机适老化评估系统</h1>
-</div>
-""", unsafe_allow_html=True)
 
 custom_css_sidebar = """
 <style>
@@ -244,6 +245,16 @@ def resource_path(relative_path):
 #############################
 # 2. 评估辅助函数
 #############################
+#def get_region_convex_hull(h1, A, B, C, constant, num_samples=20000):
+#    points = []
+#    for _ in range(num_samples):
+#        alpha1 = np.random.uniform(-math.pi/3, (17/18)*math.pi)
+#        alpha2 = np.random.uniform(0, 0.75*math.pi)
+#        alpha3 = np.random.uniform(-7/18*math.pi, (4/9)*math.pi)
+#        x = A * math.sin(alpha1) + B * math.sin(alpha1 + alpha2) + C * math.sin(alpha1 + alpha2 - alpha3)
+#        y = constant - h1/2 - (A * math.cos(alpha1) + B * math.cos(alpha1 + alpha2) + C * math.cos(alpha1 + alpha2 - alpha3))
+#        points.append((x, y))
+#    return MultiPoint(points).convex_hull
 @st.cache_data(show_spinner=False)
 def get_region_convex_hull(h1, A, B, C, constant, num_samples=20000):
     # 直接生成随机数组
