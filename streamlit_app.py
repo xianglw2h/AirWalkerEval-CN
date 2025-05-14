@@ -119,7 +119,12 @@ st.markdown(custom_css, unsafe_allow_html=True)
 
 custom_css_top = """
 <style>
+/* 隐藏 header 和 footer */
+header {display: none;}
+footer {display: none;}
 
+/* 隐藏右上角的工具栏（可选） */
+[data-testid="stToolbar"] {display: none;}
 
 /* 移除主内容容器上边距 */
 div.block-container {
@@ -211,19 +216,14 @@ hr.section-divider {
 """
 st.markdown(custom_css, unsafe_allow_html=True)
 # ...existing code...
-st.markdown("""
-<style>
-/* 为标题预留空间 */
-div.block-container {
-    padding-top: 0px !important; 
-}
-</style>
-
-<div style="text-align: center; padding: 10px 0; background-color: #F8F8F8; 
-border-bottom: 1px solid #ccc;">
-    <h1 style="margin: 0; font-size:2.5em;">太空漫步机适老化评估系统</h1>
-</div>
-""", unsafe_allow_html=True)
+# 将标题内容直接放入 header 区域（这里模拟 header 可以直接插入到页面最顶部）
+st.markdown(
+    """
+    <header style="width:100%; background-color: #F8F8F8; border-bottom: 1px solid #ccc; text-align: center; padding: 10px 0;">
+        <h1 style="margin: 0; font-size:2.5em;">太空漫步机适老化评估系统</h1>
+    </header>
+    """, unsafe_allow_html=True
+)
 
 custom_css_sidebar = """
 <style>
