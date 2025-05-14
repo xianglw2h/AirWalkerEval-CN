@@ -155,7 +155,7 @@ footer {visibility: hidden;}
 
 /* 移除主内容容器上边距，保留一些空间给header */
 div.block-container {
-    padding-top: 0.1rem !important;
+    padding-top: 0rem !important;
 }
 </style>
 """
