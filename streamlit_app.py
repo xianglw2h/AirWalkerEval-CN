@@ -24,21 +24,23 @@ def check_password():
     if st.session_state.password_correct:
         return True
     
-    st.markdown("<h1 style='text-align: center;'>太空漫步机适老化评估系统</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; font-size: 1.5em;'>太空漫步机适老化评估系统</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center;'>请输入访问密码</p>", unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns([1,2,1])
     with col2:
-        password = st.text_input("密码:", type="password")
-        if password == correct_password:
-            st.session_state.password_correct = True
-            st.rerun()
-        elif password:
-            st.error("❌ 密码不正确，请重试")
-            return False
-        else:
-            return False
+        # 使用表单来确保有提交按钮
+        with st.form("password_form"):
+            password = st.text_input("密码:", type="password")
+            submitted = st.form_submit_button("确定")
             
+            if submitted:
+                if password == correct_password:
+                    st.session_state.password_correct = True
+                    st.rerun()
+                else:
+                    st.error("❌ 密码不正确，请重试")
+                    
     return False
 
 # 在您的主应用代码前添加密码检查
