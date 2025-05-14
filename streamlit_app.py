@@ -32,8 +32,17 @@ friendly_names = {
 #############################
 # 1. 页面设置与自定义 CSS
 #############################
-st.set_page_config(page_title="欢迎使用系统(⌐■_■)", layout="wide")
+st.set_page_config(page_title="记住我的名字：梁翔(⌐■_■)", layout="wide")
 # ...existing code...
+st.markdown(
+    """
+    <style>
+    body {
+        zoom: 75%;
+    }
+    </style>
+    """, unsafe_allow_html=True
+)
 # 立即应用重要的表单样式覆盖
 st.markdown("""
 <style>
