@@ -217,11 +217,12 @@ hr.section-divider {
 st.markdown(custom_css, unsafe_allow_html=True)
 # ...existing code...
 # 将标题内容直接放入 header 区域（这里模拟 header 可以直接插入到页面最顶部）
+# 使用 div 替换 header（这样可以避免默认 header 样式冲突）
 st.markdown(
     """
-    <header style="width:100%; background-color: #F8F8F8; border-bottom: 1px solid #ccc; text-align: center; padding: 10px 0;">
+    <div class="custom-header" style="width:100%; background-color: #F8F8F8; border-bottom: 1px solid #ccc; text-align: center; padding: 10px 0;">
         <h1 style="margin: 0; font-size:2.5em;">太空漫步机适老化评估系统</h1>
-    </header>
+    </div>
     """, unsafe_allow_html=True
 )
 
