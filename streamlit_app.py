@@ -32,7 +32,7 @@ friendly_names = {
 #############################
 # 1. 页面设置与自定义 CSS
 #############################
-st.set_page_config(page_title="你好(⌐■_■)欢迎使用软件", layout="wide")
+st.set_page_config(page_title="你好(⌐■_■)欢迎使用软件！", layout="wide")
 # ...existing code...
 # 立即应用重要的表单样式覆盖
 st.markdown("""
@@ -244,15 +244,17 @@ def resource_path(relative_path):
 #############################
 # 2. 评估辅助函数
 #############################
+@st.cache_data(show_spinner=False)
 def get_region_convex_hull(h1, A, B, C, constant, num_samples=20000):
-    points = []
-    for _ in range(num_samples):
-        alpha1 = np.random.uniform(-math.pi/3, (17/18)*math.pi)
-        alpha2 = np.random.uniform(0, 0.75*math.pi)
-        alpha3 = np.random.uniform(-7/18*math.pi, (4/9)*math.pi)
-        x = A * math.sin(alpha1) + B * math.sin(alpha1 + alpha2) + C * math.sin(alpha1 + alpha2 - alpha3)
-        y = constant - h1/2 - (A * math.cos(alpha1) + B * math.cos(alpha1 + alpha2) + C * math.cos(alpha1 + alpha2 - alpha3))
-        points.append((x, y))
+    # 直接生成随机数组
+    alpha1 = np.random.uniform(-math.pi/3, (17/18)*math.pi, num_samples)
+    alpha2 = np.random.uniform(0, 0.75*math.pi, num_samples)
+    alpha3 = np.random.uniform(-7/18*math.pi, (4/9)*math.pi, num_samples)
+    # 向量化计算坐标
+    x = A * np.sin(alpha1) + B * np.sin(alpha1 + alpha2) + C * np.sin(alpha1 + alpha2 - alpha3)
+    y = constant - h1/2 - (A * np.cos(alpha1) + B * np.cos(alpha1 + alpha2) + C * np.cos(alpha1 + alpha2 - alpha3))
+    # 组合成点列表
+    points = list(zip(x, y))
     return MultiPoint(points).convex_hull
 
 def check_grip_range(h2, h3, h1):
