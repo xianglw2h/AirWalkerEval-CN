@@ -32,7 +32,7 @@ friendly_names = {
 #############################
 # 1. 页面设置与自定义 CSS
 #############################
-st.set_page_config(page_title="欢迎使用软件(⌐■_■)", layout="wide")
+st.set_page_config(page_title="记住我的名字：梁翔(⌐■_■)", layout="wide")
 # ...existing code...
 st.markdown(
     """
@@ -216,30 +216,19 @@ hr.section-divider {
 """
 st.markdown(custom_css, unsafe_allow_html=True)
 # ...existing code...
-st.markdown(
-    """
-    <style>
-    .fixed-header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        background-color: #F8F8F8;
-        text-align: center;
-        padding: 10px 0;
-        z-index: 1000;
-        border-bottom: 1px solid #ccc;
-    }
-    /* 预留空间，避免内容被标题遮挡 */
-    body {
-        padding-top: 60px;
-    }
-    </style>
-    <div class="fixed-header">
-        <h1>太空漫步机适老化评估系统</h1>
-    </div>
-    """, unsafe_allow_html=True
-)
+st.markdown("""
+<style>
+/* 为标题预留空间 */
+div.block-container {
+    padding-top: 20px !important; 
+}
+</style>
+
+<div style="text-align: center; padding: 10px 0; background-color: #F8F8F8; 
+border-bottom: 1px solid #ccc;">
+    <h1 style="margin: 0; font-size:2.5em;">太空漫步机适老化评估系统</h1>
+</div>
+""", unsafe_allow_html=True)
 
 custom_css_sidebar = """
 <style>
