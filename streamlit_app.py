@@ -119,9 +119,6 @@ st.markdown(custom_css, unsafe_allow_html=True)
 
 custom_css_top = """
 <style>
-/* 隐藏 header 和 footer */
-
-footer {display: none;}
 
 /* 隐藏右上角的工具栏（可选） */
 [data-testid="stToolbar"] {display: none;}
@@ -216,6 +213,19 @@ hr.section-divider {
 """
 st.markdown(custom_css, unsafe_allow_html=True)
 # ...existing code...
+st.markdown(
+    """
+    <style>
+    /* 隐藏 Streamlit 默认 header 和 footer */
+    [data-testid="stHeader"], footer { display: none !important; }
+    /* 移除主内容容器的上边距 */
+    div.block-container {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+    </style>
+    """, unsafe_allow_html=True
+)
 # 将标题内容直接放入 header 区域（这里模拟 header 可以直接插入到页面最顶部）
 # 使用 div 替换 header（这样可以避免默认 header 样式冲突）
 st.markdown(
