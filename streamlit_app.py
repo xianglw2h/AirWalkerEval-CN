@@ -120,7 +120,7 @@ st.markdown(custom_css, unsafe_allow_html=True)
 custom_css_top = """
 <style>
 /* 隐藏 header 和 footer */
-header {display: none;}
+
 footer {display: none;}
 
 /* 隐藏右上角的工具栏（可选） */
