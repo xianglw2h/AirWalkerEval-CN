@@ -63,6 +63,12 @@ def check_password():
         color: white !important;
     }
     
+    /* 限制密码输入框宽度 */
+    div[data-testid="stTextInput"] {
+        max-width: 300px !important;
+        margin: 0 auto !important;
+    }
+                            
     /* 仅对标签应用宋体字体，不影响输入框内部 */
     div[data-testid="stTextInput"] label {
         font-family: "SimSun", "NSimSun", "宋体", serif !important;
