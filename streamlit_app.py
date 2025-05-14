@@ -7,6 +7,25 @@ import sys
 from image_data import par_base64
 import os
 
+st.set_page_config(page_title="欢迎使用系统(⌐■_■)", layout="wide")
+# ...existing code...
+
+# 立即应用重要的表单样式覆盖
+# 在导入部分后，初始化session_state
+if "last_evaluation_results" not in st.session_state:
+    st.session_state.last_evaluation_results = None
+if "password_correct" not in st.session_state:
+    st.session_state.password_correct = False
+
+st.markdown(
+    """
+    <style>
+    body {
+        zoom: 80%;
+    }
+    </style>
+    """, unsafe_allow_html=True
+)
 
 # 在导入部分后，添加密码保护功能
 def check_password():
@@ -110,11 +129,7 @@ def check_password():
 # 在您的主应用代码前添加密码检查
 if not check_password():
     st.stop()  # 如果密码不正确，停止应用的其余部分
-
-# 在导入部分后，初始化session_state
-if "last_evaluation_results" not in st.session_state:
-    st.session_state.last_evaluation_results = None
-
+    
 #############################
 # 全局参数：参数友好名称
 #############################
@@ -137,18 +152,7 @@ friendly_names = {
 #############################
 # 1. 页面设置与自定义 CSS
 #############################
-st.set_page_config(page_title="欢迎使用系统(⌐■_■)", layout="wide")
-# ...existing code...
-st.markdown(
-    """
-    <style>
-    body {
-        zoom: 80%;
-    }
-    </style>
-    """, unsafe_allow_html=True
-)
-# 立即应用重要的表单样式覆盖
+
 st.markdown("""
 <style>
 /* 最高优先级覆盖 */
