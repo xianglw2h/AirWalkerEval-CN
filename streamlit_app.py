@@ -34,20 +34,40 @@ friendly_names = {
 #############################
 st.set_page_config(page_title="欢迎使用评估系统(⌐■_■)", layout="wide")
 # ...existing code...
-# ...existing code...
-st.markdown("""
-<style>
-/* 为固定标题预留空间 */
-div.block-container {
-    padding-top: 20px !important; 
-}
-</style>
+import streamlit as st
 
-<div style="position: fixed; top: 0; left: 0; width: 100%; background-color: #F8F8F8; 
-text-align: center; padding: 10px 0; z-index: 1000; border-bottom: 1px solid #ccc;">
-    <h1 style="margin: 0; font-size:2.5em;">太空漫步机适老化评估系统</h1>
-</div>
-""", unsafe_allow_html=True)
+# 最早加载CSS，预加载标题样式，保证标题区域固定
+st.markdown(
+    """
+    <style>
+    /* 固定标题区域 */
+    .fixed-title {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: #F8F8F8;
+        text-align: center;
+        padding: 10px 0;
+        z-index: 1000;
+        border-bottom: 1px solid #ccc;
+    }
+    /* 为页面其他内容预留空间 */
+    body {
+        padding-top: 70px; /* 根据标题区域高度调整 */
+    }
+    </style>
+    """, unsafe_allow_html=True
+)
+
+# 固定标题直接渲染
+st.markdown(
+    """
+    <div class="fixed-title">
+        <h1 style="margin: 0; font-size:2.5em;">太空漫步机适老化评估系统</h1>
+    </div>
+    """, unsafe_allow_html=True
+)
 # 立即应用重要的表单样式覆盖
 st.markdown("""
 <style>
