@@ -32,7 +32,7 @@ friendly_names = {
 #############################
 # 1. 页面设置与自定义 CSS
 #############################
-st.set_page_config(page_title="记住我的名字：梁翔(⌐■_■)", layout="wide")
+st.set_page_config(page_title="欢迎使用系统(⌐■_■)", layout="wide")
 # ...existing code...
 # 立即应用重要的表单样式覆盖
 st.markdown("""
@@ -132,7 +132,7 @@ header::after {
     content: "太空漫步机适老化评估系统";
     display: block;
     text-align: center;
-    font-size: 2.5em;
+    font-size: 2.0em;
     font-weight: bold;
     padding: 10px 0;
     font-family: "SimSun", "NSimSun", "宋体", serif !important;
