@@ -882,7 +882,7 @@ if submitted:
             background-color: #FFEBEE;
             border-radius: 0.5rem;
             border-left: 0.3rem solid #F44336;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
             color: #212121;
             font-size: 16px;
         }
@@ -891,7 +891,7 @@ if submitted:
             background-color: #E8F5E9;
             border-radius: 0.5rem;
             border-left: 0.3rem solid #4CAF50;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
             color: #212121;
             font-size: 16px;
         }
@@ -900,7 +900,7 @@ if submitted:
             background-color: #FFF8E1;
             border-radius: 0.5rem;
             border-left: 0.3rem solid #FF9800;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
             color: #212121;
             font-size: 16px;
         }
@@ -909,7 +909,7 @@ if submitted:
             background-color: #E3F2FD;
             border-radius: 0.5rem;
             border-left: 0.3rem solid #2196F3;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
             color: #212121;
             font-size: 16px;
         }
