@@ -58,7 +58,7 @@ def check_password():
     </style>
     """, unsafe_allow_html=True)
     
-    st.markdown("<p style='text-align: center; font-size: 1.5em;'>太空漫步机适老化评估系统</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; font-size: 1.5em;'>太空漫步机适老化评估系统</h1>", unsafe_allow_html=True)
 #    st.markdown("<p style='text-align: center;'>请输入访问密码</p>", unsafe_allow_html=True)
     
     # 使用列布局使内容居中显示
