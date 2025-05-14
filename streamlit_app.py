@@ -134,7 +134,7 @@ header::after {
     text-align: center;
     font-size: 2.0em;
     font-weight: bold;
-    padding: 10px 0;
+    padding: 0px 0;
     font-family: "SimSun", "NSimSun", "宋体", serif !important;
 }
 
