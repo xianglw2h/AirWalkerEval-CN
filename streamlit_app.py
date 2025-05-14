@@ -607,7 +607,7 @@ st.sidebar.markdown(
 # ...在参数输入部分
 # 修改参数输入部分，将所有输入控件放在form中
 with col_input:
-    st.markdown("### 📃参数输入 <span style='font-size:0.8em; color:#666;'>(单位：mm ,°)</span>", unsafe_allow_html=True)
+    st.markdown("<h3 style='margin-top:0; padding-top:0;'>📃参数输入 <span style='font-size:0.8em; color:#666;'>(单位：mm ,°)</span></h3>", unsafe_allow_html=True)
     
     # 创建表单 - 所有输入控件都在表单内
     with st.form(key="input_form"):
