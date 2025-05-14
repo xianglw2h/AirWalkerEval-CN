@@ -216,19 +216,30 @@ hr.section-divider {
 """
 st.markdown(custom_css, unsafe_allow_html=True)
 # ...existing code...
-st.markdown("""
-<style>
-/* 为固定标题预留空间 */
-div.block-container {
-    padding-top: 20px !important; 
-}
-</style>
-
-<div style="position: fixed; top: 0; left: 0; width: 100%; background-color: #F8F8F8; 
-text-align: center; padding: 10px 0; z-index: 1000; border-bottom: 1px solid #ccc;">
-    <h1 style="margin: 0; font-size:2.5em;">太空漫步机适老化评估系统</h1>
-</div>
-""", unsafe_allow_html=True)
+st.markdown(
+    """
+    <style>
+    .fixed-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: #F8F8F8;
+        text-align: center;
+        padding: 10px 0;
+        z-index: 1000;
+        border-bottom: 1px solid #ccc;
+    }
+    /* 预留空间，避免内容被标题遮挡 */
+    body {
+        padding-top: 60px;
+    }
+    </style>
+    <div class="fixed-header">
+        <h1>太空漫步机适老化评估系统</h1>
+    </div>
+    """, unsafe_allow_html=True
+)
 
 custom_css_sidebar = """
 <style>
