@@ -34,15 +34,6 @@ friendly_names = {
 #############################
 st.set_page_config(page_title="记住我的名字：梁翔(⌐■_■)", layout="wide")
 # ...existing code...
-st.markdown(
-    """
-    <style>
-    body {
-        zoom: 75%;
-    }
-    </style>
-    """, unsafe_allow_html=True
-)
 # 立即应用重要的表单样式覆盖
 st.markdown("""
 <style>
@@ -119,13 +110,43 @@ st.markdown(custom_css, unsafe_allow_html=True)
 
 custom_css_top = """
 <style>
+/* 修改header样式而不是隐藏它 */
+header {
+    height: auto !important;
+    background-color: #F8F8F8 !important;
+    padding: 0 !important;
+    border-bottom: 1px solid #ccc !important;
+    visibility: visible !important;
+}
+
+/* 隐藏header内原有元素 */
+header .decrement-resolution, 
+header .increment-resolution,
+header .stMarkdown,
+header > div {
+    display: none !important;
+}
+
+/* 为header添加标题内容 */
+header::after {
+    content: "太空漫步机适老化评估系统";
+    display: block;
+    text-align: center;
+    font-size: 2.5em;
+    font-weight: bold;
+    padding: 10px 0;
+    font-family: "SimSun", "NSimSun", "宋体", serif !important;
+}
+
+/* 隐藏footer */
+footer {visibility: hidden;}
 
 /* 隐藏右上角的工具栏（可选） */
-[data-testid="stToolbar"] {display: none;}
+[data-testid="stToolbar"] {visibility: hidden;}
 
-/* 移除主内容容器上边距 */
+/* 移除主内容容器上边距，保留一些空间给header */
 div.block-container {
-    padding-top: 0px;
+    padding-top: 1rem !important;
 }
 </style>
 """
@@ -212,29 +233,7 @@ hr.section-divider {
 </style>
 """
 st.markdown(custom_css, unsafe_allow_html=True)
-# ...existing code...
-st.markdown(
-    """
-    <style>
-    /* 隐藏 Streamlit 默认 header 和 footer */
-    [data-testid="stHeader"], footer { display: none !important; }
-    /* 移除主内容容器的上边距 */
-    div.block-container {
-        padding-top: 0 !important;
-        margin-top: 0 !important;
-    }
-    </style>
-    """, unsafe_allow_html=True
-)
-# 将标题内容直接放入 header 区域（这里模拟 header 可以直接插入到页面最顶部）
-# 使用 div 替换 header（这样可以避免默认 header 样式冲突）
-st.markdown(
-    """
-    <div class="custom-header" style="width:100%; background-color: #F8F8F8; border-bottom: 1px solid #ccc; text-align: center; padding: 10px 0;">
-        <h1 style="margin: 0; font-size:2.5em;">太空漫步机适老化评估系统</h1>
-    </div>
-    """, unsafe_allow_html=True
-)
+
 
 custom_css_sidebar = """
 <style>
