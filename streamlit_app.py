@@ -22,11 +22,7 @@ def check_password():
     """返回`True`如果用户输入了正确的密码."""
     
     # 从环境变量获取密码
-    correct_password = os.environ.get("APP_PASSWORD")
-    
-    if correct_password is None:
-        st.error("管理员未设置密码。请联系管理员设置APP_PASSWORD环境变量。")
-        return False
+    correct_password = os.environ.get("APP_PASSWORD", "test")  # 添加默认密码用于测试
     
     if "password_correct" not in st.session_state:
         st.session_state.password_correct = False
@@ -34,22 +30,11 @@ def check_password():
     if st.session_state.password_correct:
         return True
     
-    # 为密码表单添加无边框样式
+    # 添加自定义CSS，使按钮样式与系统一致
     st.markdown("""
     <style>
-    /* 专门针对密码表单的样式覆盖 */
-    div[data-testid="stForm"][key="password_form"], 
-    div[data-testid="stForm"][key="password_form"] > div,
-    div[data-testid="stForm"][key="password_form"] [data-testid="stFormSubmitButton"] {
-        border: none !important;
-        padding: 0 !important;
-        background-color: transparent !important;
-        box-shadow: none !important;
-        margin: 0 !important;
-    }
-    
-    /* 保持按钮样式一致 */
-    div[data-testid="stForm"][key="password_form"] [data-testid="stFormSubmitButton"] button {
+    /* 确保按钮样式一致 */
+    div.stButton > button {
         width: 100%;
         background-color: #FFCA28 !important; 
         color: black !important;
@@ -62,8 +47,8 @@ def check_password():
         transition: background-color 0.3s ease, color 0.3s ease !important;
     }
     
-    div[data-testid="stForm"][key="password_form"] [data-testid="stFormSubmitButton"] button:hover {
-        background-color: #FFA000 !important;
+    div.stButton > button:hover {
+        background-color: #FFA000 !important; 
         color: white !important;
     }
     </style>
@@ -72,20 +57,21 @@ def check_password():
     st.markdown("<h1 style='text-align: center; font-size: 1.5em;'>太空漫步机适老化评估系统</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center;'>请输入访问密码</p>", unsafe_allow_html=True)
     
+    # 使用列布局使内容居中显示
     col1, col2, col3 = st.columns([1,2,1])
+    
     with col2:
-        # 使用表单来确保有提交按钮
-        with st.form(key="password_form"):
-            password = st.text_input("密码:", type="password")
-            submitted = st.form_submit_button("确定")
-            
-            if submitted:
-                if password == correct_password:
-                    st.session_state.password_correct = True
-                    st.rerun()
-                else:
-                    st.error("❌ 密码不正确，请重试")
-                    
+        # 使用普通输入框代替form
+        password = st.text_input("密码:", type="password", key="password_input")
+        
+        # 使用普通按钮
+        if st.button("确定", key="submit_button"):
+            if password == correct_password:
+                st.session_state.password_correct = True
+                st.rerun()
+            else:
+                st.error("❌ 密码不正确，请重试")
+    
     return False
 
 # 在您的主应用代码前添加密码检查
