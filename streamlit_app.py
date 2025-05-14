@@ -30,21 +30,25 @@ def check_password():
     if st.session_state.password_correct:
         return True
     
-    # 添加自定义CSS，使按钮样式与系统一致
+    # 修改按钮CSS样式，设置更小的宽度
     st.markdown("""
     <style>
-    /* 确保按钮样式一致 */
+    /* 修改按钮样式，设置较小的宽度 */
     div.stButton > button {
-        width: 100%;
+        width: auto !important; /* 自适应内容宽度 */
+        min-width: 100px !important; /* 设置最小宽度 */
+        max-width: 150px !important; /* 设置最大宽度 */
         background-color: #FFCA28 !important; 
         color: black !important;
         border-radius: 8px !important;
-        padding: 0.8em 1.8em !important;
+        padding: 0.5em 1.5em !important;
         border: none !important;
         font-size: 1.2em !important;
         font-weight: bold !important;
         cursor: pointer !important;
         transition: background-color 0.3s ease, color 0.3s ease !important;
+        margin: 0 auto !important; /* 水平居中 */
+        display: block !important;
     }
     
     div.stButton > button:hover {
@@ -54,23 +58,27 @@ def check_password():
     </style>
     """, unsafe_allow_html=True)
     
-    st.markdown("<h1 style='text-align: center; font-size: 1.5em;'>太空漫步机适老化评估系统</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center;'>请输入访问密码</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; font-size: 1.5em;'>太空漫步机适老化评估系统</h1>", unsafe_allow_html=True)
+#    st.markdown("<p style='text-align: center;'>请输入访问密码</p>", unsafe_allow_html=True)
     
     # 使用列布局使内容居中显示
     col1, col2, col3 = st.columns([1,2,1])
     
     with col2:
-        # 使用普通输入框代替form
-        password = st.text_input("密码:", type="password", key="password_input")
+        # 使用普通输入框
+        password = st.text_input("输入正确的密码才能访问哟ಥ_ಥ", type="password", key="password_input")
         
-        # 使用普通按钮
-        if st.button("确定", key="submit_button"):
-            if password == correct_password:
-                st.session_state.password_correct = True
-                st.rerun()
-            else:
-                st.error("❌ 密码不正确，请重试")
+        # 创建一个容器用于放置按钮
+        button_container = st.container()
+        # 在容器内创建三列，将按钮放在中间列
+        btn_cols = button_container.columns([4, 2, 4])
+        with btn_cols[1]:
+            if st.button("确定", key="submit_button"):
+                if password == correct_password:
+                    st.session_state.password_correct = True
+                    st.rerun()
+                else:
+                    st.error("⛔密码不正确，请重试")
     
     return False
 
