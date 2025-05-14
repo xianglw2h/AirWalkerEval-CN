@@ -32,9 +32,22 @@ def check_password():
         return True
     
     # 修改按钮CSS样式，设置更小的宽度
+def check_password():
+    """返回`True`如果用户输入了正确的密码."""
+    
+    # 从环境变量获取密码
+    correct_password = os.environ.get("APP_PASSWORD", "test")  # 添加默认密码用于测试
+    
+    if "password_correct" not in st.session_state:
+        st.session_state.password_correct = False
+        
+    if st.session_state.password_correct:
+        return True
+    
+    # 修改按钮CSS样式，设置更小的宽度
     st.markdown("""
     <style>
-    /* 修改按钮样式，设置较小的宽度 */
+    /* 修改按钮样式，设置较小的宽度并使用宋体 */
     div.stButton > button {
         width: auto !important; /* 自适应内容宽度 */
         min-width: 100px !important; /* 设置最小宽度 */
@@ -50,6 +63,11 @@ def check_password():
         transition: background-color 0.3s ease, color 0.3s ease !important;
         margin: 0 auto !important; /* 水平居中 */
         display: block !important;
+        font-family: "SimSun", "NSimSun", "宋体", serif !important;
+    }
+    
+    /* 特别为按钮文本应用宋体，确保文本内容使用宋体 */
+    div.stButton > button > div {
         font-family: "SimSun", "NSimSun", "宋体", serif !important;
     }
     
@@ -69,6 +87,8 @@ def check_password():
     }
     </style>
     """, unsafe_allow_html=True)
+    
+    # ... 其余代码保持不变
     
     st.markdown("<h1 style='text-align: center; font-size: 1.5em; font-family: \"SimSun\", \"NSimSun\", \"宋体\", serif;'>太空漫步机适老化评估系统</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; font-family: \"SimSun\", \"NSimSun\", \"宋体\", serif;'>输入正确的密码才能访问哟ಥ_ಥ</p>", unsafe_allow_html=True)
