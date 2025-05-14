@@ -34,6 +34,15 @@ friendly_names = {
 #############################
 st.set_page_config(page_title="欢迎使用系统(⌐■_■)", layout="wide")
 # ...existing code...
+st.markdown(
+    """
+    <style>
+    body {
+        zoom: 80%;
+    }
+    </style>
+    """, unsafe_allow_html=True
+)
 # 立即应用重要的表单样式覆盖
 st.markdown("""
 <style>
@@ -134,7 +143,7 @@ header::after {
     text-align: center;
     font-size: 2.0em;
     font-weight: bold;
-    padding: 15px 0;
+    padding: 0px 0;
     font-family: "SimSun", "NSimSun", "宋体", serif !important;
 }
 
@@ -146,7 +155,7 @@ footer {visibility: hidden;}
 
 /* 移除主内容容器上边距，保留一些空间给header */
 div.block-container {
-    padding-top: 0.2rem !important;
+    padding-top: 1rem !important;
 }
 </style>
 """
@@ -807,7 +816,7 @@ if submitted:
                 for err in safety_errors:
                     evaluation_results.append({"type": "error", "message": err})
             else:
-                evaluation_results.append({"type": "success", "message": "✅设施符合安全性标准"})
+                evaluation_results.append({"type": "success", "message": "✅ 设施符合安全性标准"})
                 evaluation_results.append({"type": "divider"})
                 
                 # 适用性评估
@@ -823,7 +832,7 @@ if submitted:
                 for comp, keys in groups.items():
                     comp_pass = all(suit_results.get(key, {}).get("suitability_pass", False) for key in keys)
                     if comp_pass:
-                        evaluation_results.append({"type": "markdown", "message": f"<p style='font-size:18px;'>✅{comp}部分适用性良好</p>"})
+                        evaluation_results.append({"type": "markdown", "message": f"<p style='font-size:18px;'>✴️ {comp}部分适用性良好</p>"})
                     else:
                         for key in keys:
                             if key in suit_results and not suit_results[key].get("suitability_pass", False):
@@ -835,7 +844,7 @@ if submitted:
                 for key, result in suit_results.items():
                     if result.get("suitability_pass", False) and "comfort_pass" in result:
                         if result["comfort_pass"]:
-                            evaluation_results.append({"type": "markdown", "message": f"<p style='font-size:18px;'>✅{friendly_names.get(key, key)}使用舒适</p>"})
+                            evaluation_results.append({"type": "markdown", "message": f"<p style='font-size:18px;'>🅿️ {friendly_names.get(key, key)}使用舒适</p>"})
                         else:
                             evaluation_results.append({"type": "info", "message": f"{result.get('comfort_msg')}"})
 
@@ -845,7 +854,7 @@ if submitted:
                 for key, result in suit_results.items():
                     if result.get("suitability_pass", False) and "usability_pass" in result:
                         if result["usability_pass"]:
-                            evaluation_results.append({"type": "markdown", "message": f"<p style='font-size:18px;'>✅{friendly_names.get(key, key)}-易用性良好</p>"})
+                            evaluation_results.append({"type": "markdown", "message": f"<p style='font-size:18px;'>🅿️ {friendly_names.get(key, key)}-易用性良好</p>"})
                         else:
                             evaluation_results.append({"type": "info", "message": f"{result.get('usability_msg')}"})
         
