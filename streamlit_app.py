@@ -134,7 +134,7 @@ header::after {
     text-align: center;
     font-size: 2.0em;
     font-weight: bold;
-    padding: 0px 0;
+    padding: 15px 0;
     font-family: "SimSun", "NSimSun", "宋体", serif !important;
 }
 
@@ -146,7 +146,7 @@ footer {visibility: hidden;}
 
 /* 移除主内容容器上边距，保留一些空间给header */
 div.block-container {
-    padding-top: 1rem !important;
+    padding-top: 0.2rem !important;
 }
 </style>
 """
