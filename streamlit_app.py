@@ -689,7 +689,7 @@ with col_input:
 # 输出部分
 # 输出部分修改
 with col_output:
-    st.markdown("### 👁️‍🗨️评估结果")
+    st.markdown("<h3 style='margin-top:0; padding-top:0;'>### 👁️‍🗨️评估结果")
     
     # 添加固定的说明文字，不放在可被替换的容器中
     st.markdown(
