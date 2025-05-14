@@ -7,16 +7,6 @@ import sys
 from image_data import par_base64
 import os
 
-# 在导入部分后，添加密码保护功能
-import streamlit as st
-import math
-import numpy as np
-from shapely.geometry import Point, MultiPoint
-import os
-import sys
-from image_data import par_base64
-import os
-
 
 # 在导入部分后，添加密码保护功能
 def check_password():
