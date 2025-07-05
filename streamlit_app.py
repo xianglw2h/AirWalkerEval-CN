@@ -1069,4 +1069,3 @@ if submitted:
         # 如果有基本逻辑错误或安全错误则停止评估
         if basic_errors or (not basic_errors and safety_errors):
             st.stop()
-
